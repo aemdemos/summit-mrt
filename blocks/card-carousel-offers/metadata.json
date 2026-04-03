@@ -1,0 +1,39 @@
+{
+  "variantName": "card-carousel-offers",
+  "baseBlock": "card-carousel",
+  "version": "1.0.0",
+  "created": "2026-04-03T07:50:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.marriott.com/default.mi",
+    "originPage": "Marriott Bonvoy Homepage",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "compact",
+    "purpose": "promotional-offers",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image-cards + overlay-text + carousel-nav",
+    "buttonCount": 0,
+    "imageCount": 6
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "promotional offer carousels",
+      "deal/savings card sliders",
+      "marketing campaign cards"
+    ],
+    "notSuitableFor": [
+      "text-only card lists",
+      "team member carousels",
+      "testimonial sliders"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/default-mi"],
+    "reuseCount": 1,
+    "lastUsed": "2026-04-03T07:50:00.000Z"
+  }
+}

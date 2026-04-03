@@ -1,0 +1,35 @@
+@import url('./columns-tokens.css');
+
+.columns-membership > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.columns-membership img {
+  width: 100%;
+}
+
+.columns-membership > div > div {
+  order: 1;
+}
+
+.columns-membership > div > .columns-membership-img-col {
+  order: 0;
+}
+
+.columns-membership > div > .columns-membership-img-col img {
+  display: block;
+}
+
+@media (width >= 900px) {
+  .columns-membership > div {
+    align-items: center;
+    flex-direction: unset;
+    gap: var(--columns-gap);
+  }
+
+  .columns-membership > div > div {
+    flex: 1;
+    order: unset;
+  }
+}

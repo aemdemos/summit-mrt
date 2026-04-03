@@ -1,0 +1,39 @@
+{
+  "variantName": "tabs-brands",
+  "baseBlock": "tabs",
+  "version": "1.0.0",
+  "created": "2026-04-03T07:50:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.marriott.com/default.mi",
+    "originPage": "Marriott Bonvoy Homepage",
+    "blockPosition": "bottom"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "brand-portfolio",
+    "imagePattern": "icon"
+  },
+  "contentPattern": {
+    "structure": "logo + heading + category-tabs-with-brand-logos",
+    "buttonCount": 0,
+    "imageCount": 30
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "brand portfolio showcases",
+      "category-based logo displays",
+      "partner/brand directory sections"
+    ],
+    "notSuitableFor": [
+      "text-heavy content tabs",
+      "FAQ sections",
+      "form-based tab panels"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/default-mi"],
+    "reuseCount": 1,
+    "lastUsed": "2026-04-03T07:50:00.000Z"
+  }
+}

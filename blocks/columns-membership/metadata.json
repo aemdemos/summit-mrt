@@ -1,0 +1,39 @@
+{
+  "variantName": "columns-membership",
+  "baseBlock": "columns",
+  "version": "1.0.0",
+  "created": "2026-04-03T07:50:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.marriott.com/default.mi",
+    "originPage": "Marriott Bonvoy Homepage",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "membership-cta",
+    "imagePattern": "icon"
+  },
+  "contentPattern": {
+    "structure": "heading + description + CTAs | icons-with-labels",
+    "buttonCount": 2,
+    "imageCount": 4
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "membership sign-up CTAs",
+      "benefit highlight sections",
+      "value proposition layouts"
+    ],
+    "notSuitableFor": [
+      "image-heavy side-by-side layouts",
+      "comparison tables",
+      "text-only two-column content"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/default-mi"],
+    "reuseCount": 1,
+    "lastUsed": "2026-04-03T07:50:00.000Z"
+  }
+}
