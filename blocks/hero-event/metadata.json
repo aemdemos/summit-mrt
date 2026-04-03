@@ -1,0 +1,39 @@
+{
+  "variantName": "hero-event",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-04-03T07:50:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.marriott.com/default.mi",
+    "originPage": "Marriott Bonvoy Homepage",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "event-promo",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "background-image + logos + heading + description + CTA",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "event promotion pages",
+      "campaign landing pages",
+      "seasonal promotional heroes"
+    ],
+    "notSuitableFor": [
+      "text-only heroes",
+      "minimal product pages",
+      "form-based landing pages"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/default-mi"],
+    "reuseCount": 1,
+    "lastUsed": "2026-04-03T07:50:00.000Z"
+  }
+}

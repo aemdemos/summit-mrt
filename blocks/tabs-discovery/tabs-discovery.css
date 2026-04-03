@@ -1,0 +1,59 @@
+@import url('./tabs-tokens.css');
+
+.tabs-discovery .tabs-discovery-list {
+  display: flex;
+  gap: 0.5ch;
+  max-width: 100%;
+  font-size: var(--body-font-size-xs);
+  overflow-x: auto;
+}
+
+@media (width >= 600px) {
+  .tabs-discovery .tabs-discovery-list {
+    font-size: var(--body-font-size-s);
+  }
+}
+
+@media (width >= 900px) {
+  .tabs-discovery .tabs-discovery-list {
+    font-size: var(--body-font-size-m);
+  }
+}
+
+.tabs-discovery .tabs-discovery-list button {
+  flex: 0 0 max-content;
+  margin: 0;
+  border: 1px solid var(--tabs-border-color);
+  border-radius: 0;
+  padding: 0.5em;
+  background-color: var(--light-color);
+  color: initial;
+  font-weight: bold;
+  line-height: unset;
+  text-align: initial;
+  text-overflow: unset;
+  overflow: unset;
+  white-space: unset;
+  transition: background-color var(--tabs-transition-duration);
+}
+
+.tabs-discovery .tabs-discovery-list button p {
+  margin: 0;
+}
+
+.tabs-discovery .tabs-discovery-list button[aria-selected='true'] {
+  border-bottom: 1px solid var(--background-color);
+  background-color: var(--background-color);
+  cursor: initial;
+}
+
+.tabs-discovery .tabs-discovery-panel {
+  margin-top: -1px;
+  padding: var(--tabs-panel-padding);
+  border: 1px solid var(--tabs-border-color);
+  overflow: auto;
+}
+
+.tabs-discovery .tabs-discovery-panel[aria-hidden='true'] {
+  display: none;
+}

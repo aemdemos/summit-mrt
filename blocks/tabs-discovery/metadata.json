@@ -1,0 +1,39 @@
+{
+  "variantName": "tabs-discovery",
+  "baseBlock": "tabs",
+  "version": "1.0.0",
+  "created": "2026-04-03T07:50:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.marriott.com/default.mi",
+    "originPage": "Marriott Bonvoy Homepage",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "content-discovery",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "tabs + card-carousels-per-tab",
+    "buttonCount": 0,
+    "imageCount": 10
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "tabbed content discovery sections",
+      "filtered card galleries",
+      "destination/category browsing"
+    ],
+    "notSuitableFor": [
+      "simple text-only tabs",
+      "FAQ accordions",
+      "single-content tab panels"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/default-mi"],
+    "reuseCount": 1,
+    "lastUsed": "2026-04-03T07:50:00.000Z"
+  }
+}
