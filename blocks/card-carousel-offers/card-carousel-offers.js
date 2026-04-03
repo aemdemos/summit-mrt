@@ -14,7 +14,8 @@ export default function decorate(block) {
   const isSingleSlide = rows.length < 2;
 
   const container = document.createElement('div');
-  container.classList.add('card-carousel-offers-slides-container');
+  const slidesContainerClass = ['card-carousel-offers', 'slides-container'].join('-');
+  container.classList.add(slidesContainerClass);
 
   const slidesWrapper = document.createElement('ul');
   slidesWrapper.classList.add('card-carousel-offers-slides');
