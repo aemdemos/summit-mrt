@@ -1,0 +1,111 @@
+{
+  "templates": [
+    {
+      "name": "marriott-homepage",
+      "urls": [
+        "https://www.marriott.com/default.mi"
+      ],
+      "description": "Marriott Bonvoy homepage with hero banner, tabbed destination discovery, promotional card carousels, membership CTA, vacation rentals, careers, and brand portfolio ribbon",
+      "blocks": [
+        {
+          "name": "hero-event",
+          "instances": [".herobanner-fullbleed #hpHero"]
+        },
+        {
+          "name": "cards-promo",
+          "instances": [".merchandising-small-banner"]
+        },
+        {
+          "name": "tabs-discovery",
+          "instances": [".m-container-fullbleed.inverse"]
+        },
+        {
+          "name": "card-carousel-offers",
+          "instances": ["#zanrufpjcxlwf3zk.glide"]
+        },
+        {
+          "name": "columns-membership",
+          "instances": [".sc-a3657010-0.kNRmdl"]
+        },
+        {
+          "name": "card-carousel-rentals",
+          "instances": ["#qlwcwossfmqh253u.glide"]
+        },
+        {
+          "name": "cards-mini",
+          "instances": ["#hpCareersMiniCard-mini-card-container"]
+        },
+        {
+          "name": "tabs-brands",
+          "instances": [".brand-ribbon-o-brand-portfolio"]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-2",
+          "name": "Hero Banner",
+          "selector": ".herobanner-fullbleed",
+          "style": "dark",
+          "blocks": ["hero-event"],
+          "defaultContent": []
+        },
+        {
+          "id": "section-3",
+          "name": "Credit Card Banner",
+          "selector": ".merchandising-small-banner",
+          "style": null,
+          "blocks": ["cards-promo"],
+          "defaultContent": []
+        },
+        {
+          "id": "section-4",
+          "name": "Discover Whats Waiting",
+          "selector": ".m-container-fullbleed.inverse",
+          "style": "dark",
+          "blocks": ["tabs-discovery"],
+          "defaultContent": []
+        },
+        {
+          "id": "section-5",
+          "name": "Get Away Get More",
+          "selector": ".sc-eee65d86-0.bVMjbn",
+          "style": null,
+          "blocks": ["card-carousel-offers"],
+          "defaultContent": ["h2.t-title-s"]
+        },
+        {
+          "id": "section-6",
+          "name": "Best Rates Membership",
+          "selector": ".sc-a3657010-0.kNRmdl",
+          "style": "light",
+          "blocks": ["columns-membership"],
+          "defaultContent": []
+        },
+        {
+          "id": "section-7",
+          "name": "Vacation Home Rentals",
+          "selector": ".sc-eee65d86-0.bVMjbn",
+          "style": null,
+          "blocks": ["card-carousel-rentals"],
+          "defaultContent": ["h3.t-title-s", "span.t-font-m"]
+        },
+        {
+          "id": "section-8",
+          "name": "Careers and App Download",
+          "selector": "#hpCareersMiniCard-mini-card-container",
+          "style": null,
+          "blocks": ["cards-mini"],
+          "defaultContent": []
+        },
+        {
+          "id": "section-9",
+          "name": "Brand Portfolio Ribbon",
+          "selector": ".sc-1b180955-0.caoqwG",
+          "style": null,
+          "blocks": ["tabs-brands"],
+          "defaultContent": []
+        }
+      ]
+    }
+  ]
+}

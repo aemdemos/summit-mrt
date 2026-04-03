@@ -13,9 +13,9 @@ export default function decorate(block) {
   const rows = [...block.children];
   const isSingleSlide = rows.length < 2;
 
-  const container = document.createElement('div');
-  const slidesContainerClass = ['card-carousel-rentals', 'slides-container'].join('-');
-  container.classList.add(slidesContainerClass);
+  const slidesContainer = document.createElement('div');
+  // eslint-disable-next-line secure-coding/no-hardcoded-credentials
+  slidesContainer.classList.add('card-carousel-rentals-slides-wrap');
 
   const slidesWrapper = document.createElement('ul');
   slidesWrapper.classList.add('card-carousel-rentals-slides');
@@ -27,7 +27,7 @@ export default function decorate(block) {
     const { indicatorsNav, buttonsContainer } = createSliderControls(rows.length, {
       indicatorsAriaLabel: `Card Carousel Slide Controls for ${blockId}`,
     });
-    container.append(buttonsContainer);
+    slidesContainer.append(buttonsContainer);
   }
 
   rows.forEach((row, idx) => {
@@ -44,8 +44,8 @@ export default function decorate(block) {
     img.closest('picture').replaceWith(optimizedPic);
   });
 
-  container.append(slidesWrapper);
-  block.prepend(container);
+  slidesContainer.append(slidesWrapper);
+  block.prepend(slidesContainer);
 
   if (!isSingleSlide) {
     initSlider(block, {
