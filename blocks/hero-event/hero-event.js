@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 export default function decorate(block) {
-  // Hero event block - empty JS as base hero has no JS
+  // Hero event block decoration
 }
