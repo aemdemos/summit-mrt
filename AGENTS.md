@@ -220,6 +220,35 @@ Read and follow the complete workflow in `.agents/skills/excat-navigation-orches
 
 ---
 
+### Footer Migration (use Footer Orchestrator)
+
+**When a user asks to migrate, import, replicate, validate, or build a site footer from a source URL, ALWAYS use the Footer Orchestrator skill.** This applies to multi-column footers, social links, locale selectors, legal blocks, accordions on mobile, forms or controls built in `footer.js`, and appearance/behavior validation against the source.
+
+**Trigger patterns:**
+- User says: "migrate footer", "build footer from URL", "create EDS footer", "footer migration for URL" → invoke directly.
+- User says: "validate footer structure", "fix footer", "footer doesn't match source" → invoke for validation/remediation.
+
+**How to invoke:**
+Read and follow the complete workflow in `.agents/skills/excat-footer-orchestrator/SKILL.md`. Execute every phase in order — desktop first (Phases 1–3, aggregate, implement desktop, validate), then mobile only after customer confirmation. Do not skip phases, validation gates, or the mandatory workflow-start message and `session.json` contract described in the skill.
+
+**Programmatic gates (hooks):**
+The Experience Catalyst hook **`.claude/hooks/footer-validation-gate.js`** (table-driven rules in **`.claude/hooks/footer-validation-gates/`**) enforces footer orchestrator sequencing on PostToolUse and Stop — e.g. `session.json` / workflow flags, phase artifacts under `migration-work/footer-validation/`, flat semantic `content/footer.plain.html`, and blocking mobile work until desktop passes. When the footer workflow is active, edits to footer and validation files are gated; follow the skill so hooks pass rather than fighting them.
+
+**Prerequisites:**
+- The page/site must already be migrated (use `excat-site-migration` or equivalent first if it isn't).
+- The design system should already be extracted (see "Design System Extraction" above).
+- A local dev server should be available at `http://localhost:3000` (or the skill’s `migratedPath`).
+- Use Playwright (MCP) for screenshots, DOM inspection, and **real** pointer hover/click — not synthetic `element.click()` — per the skill.
+
+**Key rules:**
+- Content-first: portable copy and media live in **`content/footer.plain.html`**; `footer.js` reads that DOM — do not duplicate strings in JS. Layout shells, forms, and controls belong in `footer.js` / `footer.css`, not non-portable markup in the fragment (see the skill’s flat-structure contract).
+- Desktop delivery must be fully styled — no raw unstyled lists. Match source images and links; use validation scripts and registers under `migration-work/footer-validation/` as the skill specifies.
+- Mobile (Phase 4) runs only after the customer confirms desktop; same rigor for structural and behavior validation.
+
+**Do NOT use for:** Header or navigation migration (use Navigation Orchestrator), trivial copyright-only footers with no orchestration need, or pages not yet migrated.
+
+---
+
 ## Block architecture
 
 **File structure**: Every block lives in `blocks/{blockname}/` with two files: `{blockname}.css` and `{blockname}.js` (must export default `decorate(block)`).
