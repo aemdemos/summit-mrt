@@ -1,116 +1,212 @@
-@import url('./card-carousel-tokens.css');
+/* card-carousel-offers — Marriott "Get Away, Get More" style
+   Full-bleed image cards with title overlay, horizontal scroll, 3 visible */
 
-/* Slider layout: grid similar to .cards > ul, horizontal scroll */
-.card-carousel-offers .card-carousel-offers-slides-container {
+/* Section header — heading + subtitle left, "View More" bottom-right */
+main > .section.card-carousel-offers-container > .default-content-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-top: 32px;
+  padding-bottom: 24px;
+}
+
+.card-carousel-offers-container > .default-content-wrapper h2 {
+  font-size: 27px;
+  font-weight: 700;
+  line-height: normal;
+  margin: 0 0 8px;
+  color: #1c1c1c;
+  width: 100%;
+}
+
+.card-carousel-offers-container > .default-content-wrapper p {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1c1c1c;
+  line-height: normal;
+}
+
+.card-carousel-offers-container > .default-content-wrapper p:last-child {
+  margin-left: auto;
+}
+
+.card-carousel-offers-container > .default-content-wrapper a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 16px;
+  color: #1c1c1c;
+  text-decoration: none;
+}
+
+.card-carousel-offers-container > .default-content-wrapper a::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 18px;
+  background: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.29 6.71a1 1 0 0 0 0 1.41L13.17 12l-3.88 3.88a1 1 0 1 0 1.41 1.41l4.59-4.59a1 1 0 0 0 0-1.41L10.7 6.71a1 1 0 0 0-1.41 0z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.card-carousel-offers-container > .default-content-wrapper a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Slides wrapper */
+.card-carousel-offers .card-carousel-offers-slides-wrap {
   position: relative;
 }
 
-.card-carousel-offers .card-carousel-offers-slides,
-.card-carousel-offers .carousel-slide-indicators {
+/* Slides list — horizontal scroll, 3 cards visible */
+.card-carousel-offers .card-carousel-offers-slides {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-.card-carousel-offers .card-carousel-offers-slides-container > ul.card-carousel-offers-slides {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(var(--card-carousel-slide-min-width), 1fr);
-  gap: var(--card-carousel-gap);
-  scroll-behavior: smooth;
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
   scroll-snap-type: x mandatory;
-  overflow: scroll clip;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
 }
 
 .card-carousel-offers .card-carousel-offers-slides::-webkit-scrollbar {
   display: none;
 }
 
+/* Individual card — 3 per view */
 .card-carousel-offers .card-carousel-offers-slide {
   scroll-snap-align: start;
-  box-sizing: border-box;
-  border: var(--card-carousel-card-border-width) solid var(--card-carousel-card-border-color);
-  background-color: var(--background-color);
+  flex-shrink: 0;
+  width: calc((100% - 32px) / 3);
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.card-carousel-offers .cards-card-body {
-  margin: var(--card-carousel-card-body-margin);
-}
-
-.card-carousel-offers .cards-card-image {
+/* First child contains the image — in flow for height */
+.card-carousel-offers .card-carousel-offers-slide > :first-child {
+  position: static;
+  margin: 0;
   line-height: 0;
 }
 
 .card-carousel-offers .card-carousel-offers-slide img {
   width: 100%;
-  aspect-ratio: var(--card-carousel-image-aspect-ratio);
-  object-fit: var(--card-carousel-image-object-fit);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
 }
 
-/* Shared slide controls (indicators + prev/next) */
-.card-carousel-offers .carousel-slide-indicators {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--card-carousel-indicators-gap);
-  padding: var(--card-carousel-indicators-padding);
-  background-color: var(--light-color);
-  line-height: 0;
-}
-
-.card-carousel-offers .carousel-slide-indicator button {
-  width: var(--card-carousel-indicator-size);
-  height: var(--card-carousel-indicator-size);
+/* Last child overlays the bottom as text */
+.card-carousel-offers .card-carousel-offers-slide > :last-child {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.25rem;
+  background: linear-gradient(to top, rgb(0 0 0 / 62%) 0%, rgb(0 0 0 / 40%) 60%, transparent 100%);
+  color: #fff;
   margin: 0;
-  padding: 0;
-  border-radius: 50%;
-  background-color: var(--card-carousel-indicator-background);
-  transition: background-color var(--card-carousel-transition-duration);
+  z-index: 1;
 }
 
-.card-carousel-offers .carousel-slide-indicator button:disabled,
-.card-carousel-offers .carousel-slide-indicator button:hover,
-.card-carousel-offers .carousel-slide-indicator button:focus-visible {
-  background-color: var(--card-carousel-indicator-active-background);
+.card-carousel-offers .card-carousel-offers-slide > :last-child h4 {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0;
+  color: #fff;
 }
 
+.card-carousel-offers .card-carousel-offers-slide > :last-child p {
+  margin: 0;
+}
+
+/* Stretch the link over the entire card */
+.card-carousel-offers .card-carousel-offers-slide > :last-child a {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  font-size: 0;
+  color: transparent;
+  text-decoration: none;
+}
+
+/* Icon — bottom-right of card: chevron by default, arrow on hover.
+   Both use the same 28x28 box so the chevron matches the arrow height. */
+.card-carousel-offers .card-carousel-offers-slide::after {
+  content: '';
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
+  background: currentcolor;
+  color: #fff;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: mask 0s, transform 0.3s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.card-carousel-offers .card-carousel-offers-slide:hover::after {
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 5l7 7-7 7'/%3E%3C/svg%3E") center / contain no-repeat;
+  transform: rotate(-45deg);
+}
+
+/* Nav arrows — vertically centered on the cards only */
 .card-carousel-offers .carousel-navigation-buttons {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: var(--card-carousel-nav-inset);
-  right: var(--card-carousel-nav-inset);
+  top: 0;
+  left: -16px;
+  right: -16px;
+  height: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 1;
+  z-index: 3;
+  pointer-events: none;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
 .card-carousel-offers .carousel-navigation-buttons button {
   position: relative;
-  width: var(--card-carousel-nav-button-size);
-  height: var(--card-carousel-nav-button-size);
+  width: 40px;
+  height: 40px;
   margin: 0;
   border-radius: 50%;
+  border: none;
   padding: 0;
-  background-color: var(--card-carousel-nav-button-background);
-  transition: background-color var(--card-carousel-transition-duration);
+  background: rgb(255 255 255 / 90%);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 15%);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 0.2s, opacity 0.2s;
 }
 
-.card-carousel-offers .carousel-navigation-buttons button:hover,
-.card-carousel-offers .carousel-navigation-buttons button:focus-visible {
-  background-color: var(--card-carousel-nav-button-hover-background);
+.card-carousel-offers .carousel-navigation-buttons button:hover {
+  background: #fff;
+}
+
+/* Hide arrows at scroll boundaries */
+.card-carousel-offers .carousel-navigation-buttons button.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .card-carousel-offers .carousel-navigation-buttons button::after {
   display: block;
   content: '';
-  border: 2px solid;
+  border: 2px solid #1c1c1c;
   border-bottom: 0;
   border-left: 0;
-  height: 12px;
-  width: 12px;
+  height: 10px;
+  width: 10px;
   position: absolute;
   top: 50%;
   left: calc(50% + 2px);
@@ -122,9 +218,61 @@
   left: calc(50% - 2px);
 }
 
-@media (width >= 600px) {
+/* Page dot indicators — centered below the cards */
+.card-carousel-offers nav {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.25rem;
+}
+
+.card-carousel-offers .carousel-page-dots {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.card-carousel-offers .carousel-page-dots button {
+  width: 10px;
+  height: 10px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #ccc;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.card-carousel-offers .carousel-page-dots button:disabled {
+  background: #1c1c1c;
+  cursor: default;
+}
+
+.card-carousel-offers .carousel-page-dots button:hover:not(:disabled) {
+  background: #999;
+}
+
+/* Mobile: 1 card visible */
+@media (width < 600px) {
+  .card-carousel-offers .card-carousel-offers-slide {
+    width: 85%;
+  }
+}
+
+/* Tablet: 2 cards visible */
+@media (width >= 600px) and (width < 900px) {
+  .card-carousel-offers .card-carousel-offers-slide {
+    width: calc((100% - 16px) / 2);
+  }
+}
+
+/* Desktop: nav buttons further out */
+@media (width >= 900px) {
   .card-carousel-offers .carousel-navigation-buttons {
-    left: var(--card-carousel-nav-inset-desktop);
-    right: var(--card-carousel-nav-inset-desktop);
+    left: -22px;
+    right: -22px;
   }
 }
