@@ -1,5 +1,13 @@
 /* Fonts extracted from: https://www.marriott.com/default.mi */
 
+/* Font: MiIcons — Marriott icon font */
+@font-face {
+  font-family: MiIcons;
+  font-display: swap;
+  src: url('/fonts/mi-icons.woff2') format('woff2'),
+    url('/fonts/mi-icons.woff') format('woff');
+}
+
 /* Font: Swiss-721 (Bitstream Swiss 721 BT) — Marriott CDN */
 /* stylelint-disable max-line-length */
 

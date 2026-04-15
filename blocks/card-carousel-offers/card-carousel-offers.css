@@ -1,6 +1,11 @@
 /* card-carousel-offers — Marriott "Get Away, Get More" style
    Full-bleed image cards with title overlay, horizontal scroll, 3 visible */
 
+/* Section background — light gray like source */
+main > .section.card-carousel-offers-container {
+  background: #f4f4f4;
+}
+
 /* Section header — heading + subtitle left, "View More" bottom-right */
 main > .section.card-carousel-offers-container > .default-content-wrapper {
   display: flex;
@@ -230,29 +235,39 @@ main > .section.card-carousel-offers-container > .default-content-wrapper {
   margin: 0;
   padding: 0;
   display: flex;
+  align-items: center;
   gap: 8px;
+}
+
+.card-carousel-offers .carousel-page-dots li {
+  display: flex;
+  align-items: center;
+  line-height: 0;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
 .card-carousel-offers .carousel-page-dots button {
-  width: 10px;
-  height: 10px;
+  width: 6px;
+  height: 6px;
   margin: 0;
   padding: 0;
   border: none;
   border-radius: 50%;
-  background: #ccc;
+  background: #1c1c1c;
+  opacity: 0.7;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: opacity 0.2s;
 }
 
 .card-carousel-offers .carousel-page-dots button:disabled {
-  background: #1c1c1c;
+  width: 10px;
+  height: 10px;
+  opacity: 1;
   cursor: default;
 }
 
 .card-carousel-offers .carousel-page-dots button:hover:not(:disabled) {
-  background: #999;
+  opacity: 0.85;
 }
 
 /* Mobile: 1 card visible */
