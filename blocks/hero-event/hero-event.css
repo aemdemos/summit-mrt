@@ -1,39 +1,222 @@
-@import url('./hero-tokens.css');
+/* Hero Event Block - full-bleed hero with background image and overlaid text */
 
-.hero-event-container .hero-event-wrapper {
+/* Pull the hero section up behind both the header and the search-form
+   wrapper (which is a direct child of main, sitting before this section).
+   search-form-wrapper total = margin-top (1rem + nav) + height (~88px)
+   plus the header itself (nav-height). */
+main > .section.hero-event-container {
+  margin-top: -196px;
+  position: relative;
+}
+
+/* Hero wrapper: override global section > div constraints */
+main > .section > div.hero-event-wrapper {
   max-width: unset;
   padding: 0;
 }
 
-.hero-event {
+/* Hero container */
+main .hero-event {
   position: relative;
-  padding: var(--hero-padding);
-  min-height: var(--hero-min-height);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  /* Reserve space for header (88px) + search form (~100px) at top */
+  padding-top: calc(var(--nav-height, 88px) + 100px);
+  padding-bottom: 40px;
 }
 
-.hero-event h1 {
-  max-width: var(--hero-heading-max-width);
-  margin-left: auto;
-  margin-right: auto;
-  color: var(--background-color);
-}
-
-.hero-event picture {
+/* Row 1 - Image (absolute background, no rounded corners) */
+main .hero-event > div:first-child {
   position: absolute;
-  z-index: -1;
   inset: 0;
-  object-fit: cover;
-  box-sizing: border-box;
+  z-index: 0;
+  border-radius: 0;
 }
 
-.hero-event img {
-  object-fit: cover;
-  width: 100%;
+main .hero-event > div:first-child > div {
   height: 100%;
 }
 
+main .hero-event > div:first-child p {
+  margin: 0;
+  height: 100%;
+}
+
+main .hero-event > div:first-child picture,
+main .hero-event > div:first-child img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+/* Gradient scrim overlay - mobile: vertical top-to-bottom */
+main .hero-event::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 54%) 34.78%, rgb(0 0 0 / 62%) 100%);
+  pointer-events: none;
+}
+
+/* Row 2 - Text content (overlaid, vertically centered) */
+main .hero-event > div:nth-child(2) {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 0 16px;
+}
+
+/* Inner wrapper - aligned to page content grid */
+main .hero-event > div:nth-child(2) > div {
+  max-width: var(--max-width-site, 1140px);
+  margin: 0 auto;
+  padding: 0 8px;
+}
+
+/* Eyebrow - first paragraph (before h2) */
+main .hero-event > div:nth-child(2) p:first-child {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+}
+
+/* Heading */
+main .hero-event h2 {
+  font-family: var(--heading-font-family);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+
+/* Subheading paragraph (after h2) */
+main .hero-event h2 + p {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  margin: 0 0 0.75rem;
+}
+
+/* General text color */
+main .hero-event > div:nth-child(2) p {
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+
+/* CTA link styled as pill button */
+main .hero-event h2 ~ p a {
+  display: inline-block;
+  background: #fff;
+  color: var(--text-color);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 10px 24px;
+  border-radius: 52px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+main .hero-event h2 ~ p a:hover {
+  background: #e0e0e0;
+}
+
+/* Location/property link - moved to direct child of block by JS */
+main .hero-event > .hero-event-property-link {
+  position: absolute;
+  bottom: 24px;
+  right: 16px;
+  z-index: 1;
+  margin: 0;
+}
+
+main .hero-event > .hero-event-property-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0;
+  border-radius: 0;
+  text-decoration: none;
+  opacity: 0.9;
+}
+
+/* Location pin icon (::before pseudo-element) */
+main .hero-event > .hero-event-property-link a::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z'/%3E%3C/svg%3E") center / contain no-repeat;
+  flex-shrink: 0;
+}
+
+main .hero-event > .hero-event-property-link a:hover {
+  background: transparent;
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Tablet+ */
+@media (width >= 600px) {
+  main .hero-event h2 {
+    font-size: 35px;
+    line-height: 1.03;
+  }
+
+  main .hero-event h2 + p {
+    font-size: 14px;
+  }
+}
+
+/* Tablet landscape+ : horizontal gradient */
+@media (width >= 768px) {
+  main .hero-event::after {
+    background: linear-gradient(270.21deg, rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 0%) 9.92%, rgb(0 0 0 / 54%) 43.12%, rgb(0 0 0 / 62%) 100%);
+  }
+}
+
+/* Desktop+ */
 @media (width >= 900px) {
-  .hero-event {
-    padding: var(--hero-padding-desktop);
+  main .hero-event h2 {
+    font-size: 40px;
+    line-height: 1.15;
+    max-width: 60%;
+  }
+
+  main .hero-event h2 + p {
+    font-size: 16px;
+    line-height: 1.375;
+    max-width: 50%;
+  }
+
+  main .hero-event > .hero-event-property-link {
+    bottom: 32px;
+    right: calc((100% - var(--max-width-site, 1140px)) / 2 + 8px);
+  }
+}
+
+/* Wide desktop : wider transparent area on right */
+@media (width >= 1200px) {
+  main .hero-event::after {
+    background: linear-gradient(270.21deg, rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 0%) 17.55%, rgb(0 0 0 / 54%) 50.59%, rgb(0 0 0 / 62%) 100%);
   }
 }

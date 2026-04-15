@@ -1,5 +1,6 @@
 helix-importer-ui
 tools/**/*
+migration-work/**/*
 *.min.js
 sidekick-library.js
 # Aggregator manifest; xwalk rules expect a single file with models[].fields

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 50" fill="currentColor">
+  <!-- MARRIOTT text - smaller, letter-spaced -->
+  <text x="80" y="20" font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif" font-weight="700" font-size="14" fill="currentColor" text-anchor="middle" letter-spacing="4">MARRIOTT</text>
+  <!-- BONVOY text - larger, bold, with slashed O -->
+  <text x="80" y="40" font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="18" fill="currentColor" text-anchor="middle" letter-spacing="3">BONV&#216;Y</text>
+  <!-- Stylized M flourish below-left -->
+  <path d="M8 44 C10 38, 14 42, 16 36 C18 42, 22 38, 24 44" fill="none" stroke="#ff9662" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M12 44 C14 40, 16 43, 18 39 C20 43, 22 40, 24 44" fill="none" stroke="#ff9662" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+</svg>

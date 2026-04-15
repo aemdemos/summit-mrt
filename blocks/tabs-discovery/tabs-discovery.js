@@ -1,6 +1,16 @@
 // eslint-disable-next-line import/no-unresolved
 import { moveInstrumentation, getBlockId } from '../../scripts/scripts.js';
 
+function updateRowNav(row) {
+  const track = row.querySelector('.discovery-row-track');
+  const prev = row.querySelector('.discovery-nav-prev');
+  const next = row.querySelector('.discovery-nav-next');
+  if (!track || !prev || !next) return;
+  const { scrollLeft, scrollWidth, clientWidth } = track;
+  prev.disabled = scrollLeft <= 1;
+  next.disabled = scrollLeft + clientWidth >= scrollWidth - 1;
+}
+
 /**
  * @param {Element} block
  * @param {Element} tablist
@@ -31,6 +41,10 @@ function ensureTablistClickDelegation(block, tablist) {
     });
     tabpanel.setAttribute('aria-hidden', false);
     button.setAttribute('aria-selected', true);
+    // Update carousel nav buttons for newly visible panel
+    requestAnimationFrame(() => {
+      tabpanel.querySelectorAll('.discovery-row').forEach((row) => updateRowNav(row));
+    });
   });
 }
 
@@ -40,6 +54,9 @@ function ensureTablistClickDelegation(block, tablist) {
  */
 function isTabRowCandidate(row, tablist) {
   if (row === tablist || row.nodeType !== Node.ELEMENT_NODE) {
+    return false;
+  }
+  if (row.classList.contains('tabs-discovery-title')) {
     return false;
   }
   if (row.matches('.tabs-discovery-panel[role="tabpanel"]')) {
@@ -58,7 +75,14 @@ export function resyncTabsBlock(block) {
     return;
   }
 
-  if (block.firstElementChild !== tablist) {
+  // Ensure tablist is right after the optional title heading
+  const title = block.querySelector(':scope > .tabs-discovery-title');
+  const expectedPrev = title || null;
+  if (expectedPrev) {
+    if (tablist.previousElementSibling !== expectedPrev) {
+      expectedPrev.after(tablist);
+    }
+  } else if (block.firstElementChild !== tablist) {
     block.insertBefore(tablist, block.firstElementChild);
   }
 
@@ -150,6 +174,98 @@ export function resyncTabsBlock(block) {
   ensureTablistClickDelegation(block, tablist);
 }
 
+function appendCardText(overlay, p, className) {
+  if (p && !p.querySelector('img')) {
+    const el = document.createElement('div');
+    el.className = className;
+    el.textContent = p.textContent;
+    overlay.appendChild(el);
+    p.remove();
+  }
+}
+
+function buildDiscoveryCard(img, p, paragraphs, i) {
+  const link = p.querySelector('a');
+  const card = document.createElement('a');
+  card.className = 'discovery-card';
+  card.href = link?.href || '#';
+  card.appendChild(img);
+
+  const overlay = document.createElement('div');
+  overlay.className = 'discovery-card-content';
+  appendCardText(overlay, paragraphs[i + 1], 'discovery-card-eyebrow');
+  appendCardText(overlay, paragraphs[i + 2], 'discovery-card-title');
+  appendCardText(overlay, paragraphs[i + 3], 'discovery-card-desc');
+  card.appendChild(overlay);
+  return card;
+}
+
+/** Groups cards into rows of 2-3-2 with carousel navigation */
+function buildCardRows(cards) {
+  const ROW_SIZES = [2, 3, 2];
+  const container = document.createElement('div');
+  container.className = 'discovery-grid';
+  let offset = 0;
+
+  ROW_SIZES.forEach((size, rowIdx) => {
+    const row = document.createElement('div');
+    row.className = 'discovery-row';
+    row.dataset.row = String(rowIdx + 1);
+
+    const track = document.createElement('div');
+    track.className = 'discovery-row-track';
+    for (let c = 0; c < size && offset < cards.length; c += 1) {
+      track.appendChild(cards[offset]);
+      offset += 1;
+    }
+    row.appendChild(track);
+
+    const nav = document.createElement('div');
+    nav.className = 'discovery-row-nav';
+    const prev = document.createElement('button');
+    prev.className = 'discovery-nav-btn discovery-nav-prev';
+    prev.setAttribute('type', 'button');
+    prev.setAttribute('aria-label', 'Previous');
+    const next = document.createElement('button');
+    next.className = 'discovery-nav-btn discovery-nav-next';
+    next.setAttribute('type', 'button');
+    next.setAttribute('aria-label', 'Next');
+    nav.appendChild(prev);
+    nav.appendChild(next);
+    row.appendChild(nav);
+
+    container.appendChild(row);
+  });
+  return container;
+}
+
+function initRowCarousel(row) {
+  if (row.dataset.carouselInit === 'true') {
+    requestAnimationFrame(() => updateRowNav(row));
+    return;
+  }
+  row.dataset.carouselInit = 'true';
+
+  const track = row.querySelector('.discovery-row-track');
+  const prev = row.querySelector('.discovery-nav-prev');
+  const next = row.querySelector('.discovery-nav-next');
+  if (!track || !prev || !next) return;
+
+  prev.addEventListener('click', () => {
+    const card = track.querySelector('.discovery-card');
+    if (card) track.scrollBy({ left: -card.offsetWidth - 16, behavior: 'smooth' });
+  });
+  next.addEventListener('click', () => {
+    const card = track.querySelector('.discovery-card');
+    if (card) track.scrollBy({ left: card.offsetWidth + 16, behavior: 'smooth' });
+  });
+
+  track.addEventListener('scroll', () => updateRowNav(row), { passive: true });
+  // Update after layout settles; also observe resize for responsive changes
+  const observer = new ResizeObserver(() => updateRowNav(row));
+  observer.observe(track);
+}
+
 export default async function decorate(block) {
   const blockId = getBlockId('tabs-discovery');
   block.setAttribute('id', blockId);
@@ -166,6 +282,42 @@ export default async function decorate(block) {
     block.prepend(tablist);
   }
 
+  // Extract title row (first row with only a heading, no tab content) and display above tabs.
+  const firstRow = block.querySelector(':scope > div:not(.tabs-discovery-list)');
+  if (firstRow) {
+    const heading = firstRow.querySelector('h2');
+    const cells = firstRow.firstElementChild ? [...firstRow.firstElementChild.children] : [];
+    // If row has a heading and only one cell (no tab content cell), treat as title
+    if (heading && cells.length <= 1) {
+      heading.className = 'tabs-discovery-title';
+      block.insertBefore(heading, tablist);
+      firstRow.remove();
+    }
+  }
+
   ensureTablistClickDelegation(block, tablist);
   resyncTabsBlock(block);
+
+  // Transform flat <p> content in each tab panel into card rows (2-3-2 layout).
+  block.querySelectorAll('.tabs-discovery-panel').forEach((panel) => {
+    const contentDiv = panel.querySelector(':scope > div');
+    if (!contentDiv) return;
+
+    const paragraphs = [...contentDiv.querySelectorAll(':scope > p')];
+    const cards = [];
+
+    for (let i = 0; i < paragraphs.length; i += 1) {
+      const p = paragraphs[i];
+      const img = p.querySelector('img');
+      if (img) {
+        cards.push(buildDiscoveryCard(img, p, paragraphs, i));
+        p.remove();
+      }
+    }
+
+    const grid = buildCardRows(cards);
+    contentDiv.replaceChildren(grid);
+
+    grid.querySelectorAll('.discovery-row').forEach((row) => initRowCarousel(row));
+  });
 }

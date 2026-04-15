@@ -2,14 +2,16 @@
   "status": "success",
   "url": "https://www.marriott.com/default.mi",
   "path": "default",
-  "timestamp": "2026-04-03T11:48:02.425Z",
+  "timestamp": "2026-04-14T13:58:55.235Z",
   "title": "Marriott Bonvoy Hotels | Book Directly & Get Exclusive Rates",
   "template": "marriott-homepage",
   "blocks": [
     "hero-event",
     "cards-promo",
     "tabs-discovery",
+    "card-carousel-offers",
     "columns-membership",
+    "card-carousel-rentals",
     "cards-mini",
     "tabs-brands"
   ]
