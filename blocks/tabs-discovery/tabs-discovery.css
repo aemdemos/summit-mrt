@@ -1,59 +1,297 @@
 @import url('./tabs-tokens.css');
 
-.tabs-discovery .tabs-discovery-list {
+/* Section - dark background, full bleed */
+main > .section > div.tabs-discovery-wrapper {
+  background: #1c1c1c;
+  color: #fff;
+  max-width: unset;
+  padding: 0;
+}
+
+main .tabs-discovery-wrapper .tabs-discovery {
+  max-width: var(--max-width-site, 1140px);
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* Block */
+main .tabs-discovery {
+  padding: 2rem 0;
+}
+
+/* Title heading extracted by JS and placed before the tablist */
+main .tabs-discovery .tabs-discovery-title {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 1.5rem;
+}
+
+/* Tab list */
+main .tabs-discovery .tabs-discovery-list {
   display: flex;
-  gap: 0.5ch;
+  gap: 0;
   max-width: 100%;
-  font-size: var(--body-font-size-xs);
   overflow-x: auto;
+  border-bottom: 1px solid rgb(255 255 255 / 20%);
+  margin-bottom: 1.5rem;
+  font-size: 14px;
 }
 
-@media (width >= 600px) {
-  .tabs-discovery .tabs-discovery-list {
-    font-size: var(--body-font-size-s);
-  }
-}
-
-@media (width >= 900px) {
-  .tabs-discovery .tabs-discovery-list {
-    font-size: var(--body-font-size-m);
-  }
-}
-
-.tabs-discovery .tabs-discovery-list button {
-  flex: 0 0 max-content;
+main .tabs-discovery .tabs-discovery-list button {
+  flex: 0 0 auto;
   margin: 0;
-  border: 1px solid var(--tabs-border-color);
+  border: none;
+  border-bottom: 2px solid transparent;
   border-radius: 0;
-  padding: 0.5em;
-  background-color: var(--light-color);
-  color: initial;
-  font-weight: bold;
-  line-height: unset;
-  text-align: initial;
-  text-overflow: unset;
-  overflow: unset;
-  white-space: unset;
-  transition: background-color var(--tabs-transition-duration);
+  padding: 0.75em 1.25em;
+  background: transparent;
+  color: rgb(255 255 255 / 70%);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.4;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
 }
 
-.tabs-discovery .tabs-discovery-list button p {
+main .tabs-discovery .tabs-discovery-list button:hover {
+  color: #fff;
+}
+
+main .tabs-discovery .tabs-discovery-list button[aria-selected='true'] {
+  color: #fff;
+  border-bottom-color: #fff;
+  background: transparent;
+}
+
+/* Tab panels */
+main .tabs-discovery .tabs-discovery-panel {
   margin: 0;
+  padding: 0;
+  border: none;
+  overflow: visible;
 }
 
-.tabs-discovery .tabs-discovery-list button[aria-selected='true'] {
-  border-bottom: 1px solid var(--background-color);
-  background-color: var(--background-color);
-  cursor: initial;
-}
-
-.tabs-discovery .tabs-discovery-panel {
-  margin-top: -1px;
-  padding: var(--tabs-panel-padding);
-  border: 1px solid var(--tabs-border-color);
-  overflow: auto;
-}
-
-.tabs-discovery .tabs-discovery-panel[aria-hidden='true'] {
+main .tabs-discovery .tabs-discovery-panel[aria-hidden='true'] {
   display: none;
+}
+
+/* Card rows layout */
+main .tabs-discovery .discovery-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+main .tabs-discovery .discovery-row-track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+main .tabs-discovery .discovery-row-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Card base — mobile-first: 1 card visible, 1/1 aspect */
+main .tabs-discovery .discovery-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  text-decoration: none;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  min-width: 100%;
+}
+
+main .tabs-discovery .discovery-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Card text overlay — gradient dark on top, sized to text area */
+main .tabs-discovery .discovery-card-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  background: linear-gradient(rgb(0 0 0 / 62%) 0%, rgb(0 0 0 / 54%) 66%, rgb(0 0 0 / 0%) 100%);
+  color: #fff;
+  z-index: 1;
+}
+
+/* Full-card hover overlay */
+main .tabs-discovery .discovery-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 54%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+main .tabs-discovery .discovery-card:hover::after {
+  opacity: 1;
+}
+
+/* Eyebrow */
+main .tabs-discovery .discovery-card-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+  opacity: 0.85;
+}
+
+main .tabs-discovery .discovery-card-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  background: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* Card title */
+main .tabs-discovery .discovery-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+/* Card description - hidden by default, fades in on hover */
+main .tabs-discovery .discovery-card-desc {
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+main .tabs-discovery .discovery-card:hover .discovery-card-desc {
+  opacity: 1;
+}
+
+/* Nav buttons */
+main .tabs-discovery .discovery-row-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding-top: 0.75rem;
+}
+
+main .tabs-discovery .discovery-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / 40%);
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s;
+  padding: 0;
+}
+
+main .tabs-discovery .discovery-nav-btn:hover {
+  border-color: #fff;
+}
+
+main .tabs-discovery .discovery-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+main .tabs-discovery .discovery-nav-prev::before,
+main .tabs-discovery .discovery-nav-next::before {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid currentcolor;
+  border-right: 2px solid currentcolor;
+}
+
+main .tabs-discovery .discovery-nav-prev::before {
+  transform: rotate(-135deg);
+  margin-left: 2px;
+}
+
+main .tabs-discovery .discovery-nav-next::before {
+  transform: rotate(45deg);
+  margin-right: 2px;
+}
+
+/* ===== Tablet (768px–1199px): 1/1 aspect, rows 1&3 static 2-up, row 2 carousel 2-of-3 ===== */
+@media (width >= 768px) {
+  main .tabs-discovery .discovery-card {
+    width: calc(50% - 0.5rem);
+    min-width: calc(50% - 0.5rem);
+  }
+
+  /* Rows 1 & 3: no scroll, cards fit naturally */
+  main .tabs-discovery .discovery-row[data-row="1"] .discovery-row-track,
+  main .tabs-discovery .discovery-row[data-row="3"] .discovery-row-track {
+    overflow: hidden;
+  }
+
+  main .tabs-discovery .discovery-row[data-row="1"] .discovery-row-nav,
+  main .tabs-discovery .discovery-row[data-row="3"] .discovery-row-nav {
+    display: none;
+  }
+
+  main .tabs-discovery {
+    padding: 3rem 0;
+  }
+
+  main .tabs-discovery .tabs-discovery-title {
+    font-size: 28px;
+  }
+}
+
+/* ===== Desktop (≥1200px): rows 1&3 = 2 cards 16/9, row 2 = 3 cards 2/3, no carousels ===== */
+@media (width >= 1200px) {
+  /* Row 1 & 3: 2 cards, 16/9 */
+  main .tabs-discovery .discovery-row[data-row="1"] .discovery-card,
+  main .tabs-discovery .discovery-row[data-row="3"] .discovery-card {
+    aspect-ratio: 16 / 9;
+  }
+
+  /* Row 2: 3 cards, 2/3 */
+  main .tabs-discovery .discovery-row[data-row="2"] .discovery-card {
+    width: calc(33.333% - 0.667rem);
+    min-width: calc(33.333% - 0.667rem);
+    aspect-ratio: 2 / 3;
+  }
+
+  /* No carousels on desktop */
+  main .tabs-discovery .discovery-row-track {
+    overflow: hidden;
+  }
+
+  main .tabs-discovery .discovery-row-nav {
+    display: none;
+  }
 }

@@ -1,0 +1,6 @@
+/* Tabs Discovery tokens */
+:root {
+  --tabs-border-color: transparent;
+  --tabs-transition-duration: 0.2s;
+  --tabs-panel-padding: 0;
+}

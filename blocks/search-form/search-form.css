@@ -1,0 +1,268 @@
+/* Search Form Block - sticky bar, overlays hero via negative margin on hero */
+
+/* Wrapper: sticky to top, direct child of main for full-page stickiness */
+main > div.search-form-wrapper {
+  max-width: unset;
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  margin-top: 1rem;
+  pointer-events: none;
+}
+
+/* Block: rounded card, centered */
+main .search-form {
+  pointer-events: auto;
+  max-width: var(--max-width-site, 1140px);
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 12%);
+  transition: border-radius 0.3s, max-width 0.3s, box-shadow 0.3s;
+}
+
+/* Stuck state (toggled by JS): full viewport width, no rounding */
+main > div.search-form-wrapper.is-stuck {
+  padding: 0;
+  margin-right: 0;
+  margin-left: 0;
+  pointer-events: auto;
+}
+
+main .search-form-wrapper.is-stuck .search-form {
+  max-width: 100%;
+  border-radius: 0;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+  padding: 12px 16px;
+}
+
+/* Keep inner content at same max-width so fields don't jump */
+main .search-form-inner {
+  display: flex;
+  align-items: center;
+  max-width: var(--max-width-site, 1140px);
+  margin: 0 auto;
+}
+
+/* Fields container — equal width with button */
+main .search-form-fields {
+  display: flex;
+  align-items: center;
+  flex: 2;
+  gap: 0;
+  min-width: 0;
+}
+
+/* Individual field — each takes equal space */
+main .search-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 20px;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+main .search-field:hover {
+  background: #f5f5f5;
+}
+
+/* Field divider */
+main .search-field-divider {
+  width: 1px;
+  height: 32px;
+  background: #ccc;
+  flex-shrink: 0;
+}
+
+/* Label row with icon */
+main .search-field-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #1c1c1c;
+  line-height: 1.2;
+}
+
+main .search-field input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1.375rem;
+  line-height: 1.625rem;
+  color: #6b6b6b;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Icons — inline with label */
+main .search-field-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+main .search-icon-pin {
+  background: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z'/%3E%3C/svg%3E") center / contain no-repeat;
+  color: #c4512b;
+}
+
+main .search-icon-calendar {
+  background: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/%3E%3C/svg%3E") center / contain no-repeat;
+  color: #c4512b;
+}
+
+/* Submit button — equal width with fields */
+main .search-form-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #1c1c1c;
+  color: #fff;
+  border: none;
+  border-radius: 52px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex: 1;
+  transition: background 0.2s;
+}
+
+main .search-form-submit:hover {
+  background: #333;
+}
+
+main .search-icon-search {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* Calendar datepicker popup */
+main .search-datepicker {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
+  padding: 20px;
+  z-index: 10;
+  min-width: 280px;
+  cursor: default;
+}
+
+main .cal-header {
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 12px;
+  color: #1c1c1c;
+}
+
+main .cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #999;
+  margin-bottom: 8px;
+  white-space: pre;
+  letter-spacing: 0;
+}
+
+main .cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
+}
+
+main .cal-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  font-size: 13px;
+  border-radius: 50%;
+  cursor: default;
+}
+
+main .cal-today {
+  background: #1c1c1c;
+  color: #fff;
+  font-weight: 700;
+}
+
+main .cal-available {
+  color: #1c1c1c;
+  cursor: pointer;
+}
+
+main .cal-available:hover {
+  background: #f0f0f0;
+}
+
+main .cal-past {
+  color: #ccc;
+}
+
+main .cal-empty {
+  visibility: hidden;
+}
+
+/* Mobile */
+@media (width < 600px) {
+  main .search-form {
+    border-radius: 12px;
+    padding: 8px 12px;
+  }
+
+  main .search-form-inner {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  main .search-form-fields {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  main .search-field {
+    width: 100%;
+    padding: 8px 12px;
+  }
+
+  main .search-field-divider {
+    width: 100%;
+    height: 1px;
+  }
+
+  main .search-form-submit {
+    width: 100%;
+    justify-content: center;
+  }
+}
