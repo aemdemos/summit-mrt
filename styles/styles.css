@@ -108,6 +108,18 @@ body.appear {
   display: block;
 }
 
+/* MiIcons — Marriott icon font utility */
+.mi-icon::before {
+  /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+  font-family: MiIcons;
+  display: inline-block;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 header {
   height: var(--header-height);
 }

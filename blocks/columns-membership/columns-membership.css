@@ -1,35 +1,173 @@
-@import url('./columns-tokens.css');
+/* columns-membership — "The Best Rates Are Always Here" CTA section
+   Left: heading + subtitle + two pill buttons
+   Right: 2x2 grid of icon features with cross-shaped borders */
 
+/* Block — rounded card with shadow */
+.columns-membership {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgb(0 0 0 / 8%);
+  padding: 5rem 0;
+  margin: 32px 0;
+}
+
+/* Row — two-column layout */
 .columns-membership > div {
   display: flex;
   flex-direction: column;
 }
 
-.columns-membership img {
-  width: 100%;
+/* Left column — text + buttons */
+.columns-membership > div > div:first-child {
+  margin-left: 8.333%;
 }
 
-.columns-membership > div > div {
-  order: 1;
+.columns-membership > div > div:first-child h2 {
+  font-size: 35px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: #1c1c1c;
+  margin: 0 0 8px;
 }
 
-.columns-membership > div > .columns-membership-img-col {
-  order: 0;
+.columns-membership > div > div:first-child p {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #707070;
 }
 
-.columns-membership > div > .columns-membership-img-col img {
+/* Buttons row */
+.columns-membership > div > div:first-child p:last-child {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+/* Primary button — Join for Free */
+.columns-membership > div > div:first-child p:last-child a:first-child {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #1c1c1c;
+  color: #fff;
+  border-radius: 52px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.columns-membership > div > div:first-child p:last-child a:first-child:hover {
+  background: #333;
+}
+
+/* Secondary button — Sign In */
+.columns-membership > div > div:first-child p:last-child a:last-child {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #1c1c1c;
+  border: 1px solid #1c1c1c;
+  border-radius: 52px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.columns-membership > div > div:first-child p:last-child a:last-child:hover {
+  background: #f5f5f5;
+}
+
+/* Right column — 2x2 icon grid with cross-shaped borders */
+.columns-membership > div > div:last-child {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-left: 8.333%;
+  margin-right: 8.333%;
+}
+
+.columns-membership > div > div:last-child p {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #707070;
+  line-height: 1.2;
+  gap: 12px;
+  padding: 24px 16px;
+}
+
+/* Cross-shaped borders: right border on left column items */
+.columns-membership > div > div:last-child p:nth-child(odd) {
+  border-right: 1px solid #e0e0e0;
+}
+
+/* Bottom border on top row items */
+.columns-membership > div > div:last-child p:nth-child(1),
+.columns-membership > div > div:last-child p:nth-child(2) {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Icons — MiIcons font, coral orange, normal weight */
+.columns-membership > div > div:last-child .icon {
+  display: none;
+}
+
+/* stylelint-disable font-family-no-missing-generic-family-keyword -- icon font */
+.columns-membership > div > div:last-child p::before {
+  font-family: MiIcons;
+  /* stylelint-enable font-family-no-missing-generic-family-keyword */
+  font-size: 36px;
+  font-weight: normal;
+  line-height: 1;
+  color: #ff8d6b;
   display: block;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@media (width >= 900px) {
+/* Shield — Best Rate Guarantee (\e91b) */
+.columns-membership > div > div:last-child p:nth-child(1)::before {
+  content: '\e91b';
+}
+
+/* Extra Free Nights — Earn Free Nights (\e923) */
+.columns-membership > div > div:last-child p:nth-child(2)::before {
+  content: '\e923';
+}
+
+/* WiFi — Free Wi-Fi (\e9c6) */
+.columns-membership > div > div:last-child p:nth-child(3)::before {
+  content: '\e9c6';
+}
+
+/* Rates — Member Rates (\eac3) */
+.columns-membership > div > div:last-child p:nth-child(4)::before {
+  content: '\eac3';
+}
+
+/* Tablet+: side-by-side, ~33% text / ~66% icons */
+@media (width >= 600px) {
   .columns-membership > div {
+    flex-direction: row;
     align-items: center;
-    flex-direction: unset;
-    gap: var(--columns-gap);
   }
 
-  .columns-membership > div > div {
+  .columns-membership > div > div:first-child {
+    flex: 0 0 33.333%;
+  }
+
+  .columns-membership > div > div:last-child {
     flex: 1;
-    order: unset;
+    min-width: 0;
   }
 }
