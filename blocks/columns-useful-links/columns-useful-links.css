@@ -1,0 +1,100 @@
+/* columns-useful-links — 3-column link lists with chevron/arrow icons */
+
+/* Section — gray background, 32px padding, 32px margin from neighbours */
+main > .section.columns-useful-links-container {
+  background: #f4f4f4;
+  padding: 64px 0;
+}
+
+.columns-useful-links .columns-useful-links-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Column headings */
+.columns-useful-links .columns-useful-links-col h4 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #1c1c1c;
+  margin: 0;
+  padding-bottom: 8px;
+}
+
+.columns-useful-links .columns-useful-links-col ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 9px;
+}
+
+.columns-useful-links .columns-useful-links-col li {
+  margin: 0;
+}
+
+/* Links — 14px, black, 8px padding top/bottom = 32px total row height */
+.columns-useful-links .columns-useful-links-col a,
+.columns-useful-links .columns-useful-links-col a:any-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1c1c1c;
+  text-decoration: none;
+  line-height: 16px;
+  padding: 8px 0;
+  transition: color 0.2s;
+}
+
+.columns-useful-links .columns-useful-links-col a:hover {
+  text-decoration: underline;
+}
+
+/* Internal link — simple chevron */
+.columns-useful-links .columns-useful-links-col a.link-internal::after {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  background: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* External link — chevron that becomes arrow on hover */
+.columns-useful-links .columns-useful-links-col a.link-external::after {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  background: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: mask 0s, transform 0.3s;
+}
+
+.columns-useful-links .columns-useful-links-col a.link-external:hover::after {
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 5l7 7-7 7'/%3E%3C/svg%3E") center / contain no-repeat;
+  transform: rotate(-45deg);
+}
+
+/* Desktop: 3 columns with vertical borders */
+@media (width >= 600px) {
+  .columns-useful-links .columns-useful-links-row {
+    flex-direction: row;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  .columns-useful-links .columns-useful-links-col {
+    flex: 1;
+    padding: 0 12px;
+    border-left: 1px solid #e0e0e0;
+  }
+
+  .columns-useful-links .columns-useful-links-col:first-child {
+    border-left: none;
+    padding-left: 0;
+  }
+}
