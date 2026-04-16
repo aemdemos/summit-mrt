@@ -16,7 +16,8 @@ main > .section.card-carousel-offers-container > .default-content-wrapper {
   padding-bottom: 24px;
 }
 
-.card-carousel-offers-container > .default-content-wrapper h2 {
+.card-carousel-offers-container > .default-content-wrapper h2,
+.card-carousel-offers-container > .default-content-wrapper h3 {
   font-size: 27px;
   font-weight: 700;
   line-height: normal;
@@ -120,7 +121,8 @@ main > .section.card-carousel-offers-container > .default-content-wrapper {
   z-index: 1;
 }
 
-.card-carousel-offers .card-carousel-offers-slide > :last-child h4 {
+.card-carousel-offers .card-carousel-offers-slide > :last-child h4,
+.card-carousel-offers .card-carousel-offers-slide > :last-child h2 {
   font-size: 16px;
   font-weight: 700;
   line-height: 1.3;
