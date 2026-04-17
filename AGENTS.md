@@ -204,6 +204,9 @@ Once `migration-work/design-system-extracted.json` exists with `"status": "compl
 **How to invoke:**
 Read and follow the complete workflow in `.agents/skills/excat-navigation-orchestrator/SKILL.md`. Execute every phase in order — desktop first (Phases 1–3, aggregate, implement, validate), then mobile only after customer confirmation. Do not skip phases or validation gates.
 
+**Programmatic gates (hooks):**
+In this repository, the navigation orchestrator hook is **`.agents/hooks/nav-validation-gate.js`** (supporting modules under **`.agents/hooks/nav-validation-gates/`**). It enforces sequencing on PostToolUse and Stop for `migration-work/navigation-validation/`, `content/nav.plain.html`, and related header files. Some Experience Catalyst / Claude Code setups may load an equivalent entry point from `.claude/hooks/`; the canonical sources for this project live under `.agents/hooks/`.
+
 **Prerequisites:**
 - The page must already be migrated (use `excat-page-migration` first if it isn't).
 - The design system should already be extracted (see "Design System Extraction" above).
@@ -212,7 +215,7 @@ Read and follow the complete workflow in `.agents/skills/excat-navigation-orches
 
 **Key rules:**
 - Desktop implementation must include full CSS styling and megamenu images — no raw bullet lists.
-- All text content, links, and labels go in `content/nav.md`, never hardcoded in `header.js`.
+- All text content, links, and labels go in `content/nav.plain.html`, never hardcoded in `header.js`.
 - Every component must reach ≥ 95% visual similarity via per-component critique before reporting to the customer.
 - Mobile is implemented only after customer confirms desktop; mobile follows the same structural + style validation rigor.
 
@@ -232,7 +235,7 @@ Read and follow the complete workflow in `.agents/skills/excat-navigation-orches
 Read and follow the complete workflow in `.agents/skills/excat-footer-orchestrator/SKILL.md`. Execute every phase in order — desktop first (Phases 1–3, aggregate, implement desktop, validate), then mobile only after customer confirmation. Do not skip phases, validation gates, or the mandatory workflow-start message and `session.json` contract described in the skill.
 
 **Programmatic gates (hooks):**
-The Experience Catalyst hook **`.claude/hooks/footer-validation-gate.js`** (table-driven rules in **`.claude/hooks/footer-validation-gates/`**) enforces footer orchestrator sequencing on PostToolUse and Stop — e.g. `session.json` / workflow flags, phase artifacts under `migration-work/footer-validation/`, flat semantic `content/footer.plain.html`, and blocking mobile work until desktop passes. When the footer workflow is active, edits to footer and validation files are gated; follow the skill so hooks pass rather than fighting them.
+In this repository, the footer orchestrator hook is **`.agents/hooks/footer-validation-gate.js`** (table-driven rules in **`.agents/hooks/footer-validation-gates/`**). It enforces footer orchestrator sequencing on PostToolUse and Stop — e.g. `session.json` / workflow flags, phase artifacts under `migration-work/footer-validation/`, flat semantic `content/footer.plain.html`, and blocking mobile work until desktop passes. When the footer workflow is active, edits to footer and validation files are gated; follow the skill so hooks pass rather than fighting them. Some Experience Catalyst / Claude Code setups may load an equivalent entry point from `.claude/hooks/`; the canonical sources for this project live under `.agents/hooks/`.
 
 **Prerequisites:**
 - The page/site must already be migrated (use `excat-site-migration` or equivalent first if it isn't).

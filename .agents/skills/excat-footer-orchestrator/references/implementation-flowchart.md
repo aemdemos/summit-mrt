@@ -74,7 +74,7 @@ Use schemas from `references/*-agent-schema.json` (see `reference-index.md`).
 | **Sub-agent honesty** | Hooks see files on disk, not whether Playwright was actually used. Mitigation: debug.log script markers + SKILL rules. |
 | **Stale `migration-work/footer-validation/scripts/`** | Step 1 copies from the skill; the repo plugin is canonical. Old workspace copies diverge from `skills/excat-footer-orchestrator/scripts/`. |
 
-**Single source of truth for gate logic:** `excat/hooks/footer-validation-gates/checks.js`, `gate-table.js`, and `footer-validation-gate.js` (Stop). When behavior changes, update in code **and** `references/footer-validation-gates-summary.md` (and SKILL bullets if user-facing text is wrong).
+**Single source of truth for gate logic:** `.agents/hooks/footer-validation-gates/checks.js`, `.agents/hooks/footer-validation-gates/gate-table.js`, and `.agents/hooks/footer-validation-gate.js` (Stop). When behavior changes, update in code **and** `references/footer-validation-gates-summary.md` (and SKILL bullets if user-facing text is wrong).
 
 **Appearance (must match `compare-footer-appearance.js`):** Phase 2 produces **source** `footer-appearance-mapping.json` with **required `layoutSpacing`** (px strings) plus optional `leadCaptureBand`, **`promoMediaBand`** (large image strips), **`primaryLinkBand`** (desktop link grid vs accordion), and `noticeStrip`. Desktop validation produces **migrated** mapping + run compare → `footer-appearance-register.json` (includes `layoutSpacingMatch`). `checkDesktopComplete` / Stop / `pre-completion-check.js` require: if source exists → migrated file + register with `allValidated` before Phase 4 / completion; migrated without source is invalid.
 

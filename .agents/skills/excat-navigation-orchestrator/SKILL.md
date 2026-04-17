@@ -487,7 +487,7 @@ Validate all sub-agent output with `node migration-work/navigation-validation/sc
 ## Enforcement (Two Layers — Script + Hook)
 
 - **Layer 1 — Scripts:** (1) `node migration-work/navigation-validation/scripts/validate-nav-content.js content/nav.plain.html migration-work/navigation-validation` — MANDATORY after every nav.plain.html write (exit 0 = pass). (2) `node migration-work/navigation-validation/scripts/audit-header-images.js content/nav.plain.html migration-work/navigation-validation` — MANDATORY after validate-nav-content; compares expected image count (phase-2/3 + megamenu-mapping) to actual images in nav and on disk; reports missingByLocation if gap; exit 0 and `.image-audit-passed` required.
-- **Layer 2 — Hook:** `hooks/nav-validation-gate.js` — PostToolUse gates + Stop checks covering desktop + mobile (including image audit: blocks until audit-header-images.js has run and passed). Logs tagged `[DESKTOP]`/`[MOBILE]`/`[CRITIQUE]`/`[VIEWPORT]`/`[SEARCH]`/`[LOCALE]`/`[MISSING-CONTENT]`/`[PANEL-LAYOUT]`/`[IMAGE-AUDIT]` to `migration-work/navigation-validation/debug.log` with WORKFLOW PROGRESS DASHBOARD.
+- **Layer 2 — Hook:** `.agents/hooks/nav-validation-gate.js` — PostToolUse gates + Stop checks covering desktop + mobile (including image audit: blocks until audit-header-images.js has run and passed). Logs tagged `[DESKTOP]`/`[MOBILE]`/`[CRITIQUE]`/`[VIEWPORT]`/`[SEARCH]`/`[LOCALE]`/`[MISSING-CONTENT]`/`[PANEL-LAYOUT]`/`[IMAGE-AUDIT]` to `migration-work/navigation-validation/debug.log` with WORKFLOW PROGRESS DASHBOARD.
 - Full gate details in hook file comments and `references/reference-index.md`.
 
 ## References

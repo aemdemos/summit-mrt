@@ -106,7 +106,7 @@ function countTopLevelDivs(html) {
   return count;
 }
 
-/** DA/EDS flat fragment rules — mirrors hooks/html-utils.js checkFlatSemanticStructure (string[] only). */
+/** DA/EDS flat fragment rules — mirrors .agents/hooks/html-utils.js checkFlatSemanticStructure (string[] only). */
 function checkFlatSemanticStructure(htmlContent) {
   const jsBlock = 'header.js';
   const failures = [];

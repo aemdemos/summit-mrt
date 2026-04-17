@@ -1,6 +1,6 @@
 # Footer Validation Gates Summary
 
-**Totals:** **1** hook script (`hooks/footer-validation-gate.js`) · **13** PostToolUse gates (`POST_TOOL_USE_GATES`) · **1** Stop handler (`handleStop`, many checks in sequence).
+**Totals:** **1** hook script (`.agents/hooks/footer-validation-gate.js`) · **13** PostToolUse gates (`POST_TOOL_USE_GATES`) · **1** Stop handler (`handleStop`, many checks in sequence).
 
 The footer validation hook enforces workflow rules through PostToolUse gates and Stop checks.
 
