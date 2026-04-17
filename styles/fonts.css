@@ -8,6 +8,13 @@
     url('/fonts/mi-icons.woff') format('woff');
 }
 
+/* Font: BrandLogoIcons — Marriott brand logo icon font (header logo) */
+@font-face {
+  font-family: BrandLogoIcons;
+  font-display: swap;
+  src: url('/fonts/mi-brand-logo-icons.woff2') format('woff2');
+}
+
 /* Font: Swiss-721 (Bitstream Swiss 721 BT) — Marriott CDN */
 /* stylelint-disable max-line-length */
 
