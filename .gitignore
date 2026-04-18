@@ -13,3 +13,4 @@ localhost-key.pem
 .cursor
 Trace*.json
 .migration/*
+migration-work/navigation-validation/
