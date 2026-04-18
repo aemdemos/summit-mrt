@@ -1,3 +1,10 @@
+/* MiIcons — Marriott utility nav icons */
+@font-face {
+  font-display: swap;
+  font-family: MiIcons;
+  src: url('https://cache.marriott.com/aka-fonts/mi-icons/mi-icons.woff2') format('woff2');
+}
+
 /* header design tokens — Marriott Bonvoy */
 :root {
   --header-nav-max-width: 100%;
@@ -6,10 +13,11 @@
   --header-nav-padding-desktop: 0 32px;
   --header-nav-gap: 16px;
   --header-nav-gap-desktop: 24px;
-  --header-brand-width: 140px;
-  --header-dropdown-width: 200px;
-  --header-dropdown-padding: 16px;
-  --header-dropdown-left: -24px;
+  --header-brand-width: 160px;
+  --header-dropdown-width: min(1140px, calc(100vw - 64px));
+  --header-dropdown-padding: 40px 40px 48px;
+  --header-dropdown-left: 50%;
+  --header-dropdown-transform: translateX(-50%);
   --header-hamburger-size: 22px;
   --header-hamburger-bar-width: 20px;
   --header-hamburger-bar-height: 2px;

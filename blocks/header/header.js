@@ -1,5 +1,5 @@
-import { getMetadata } from '../../scripts/aem.js';
-import { loadFragment } from '../fragment/fragment.js';
+import { getMetadata, DOMPURIFY } from '../../scripts/aem.js';
+import { ensureDOMPurify } from '../../scripts/scripts.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -179,10 +179,18 @@ async function buildBreadcrumbs() {
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
-  // load nav as fragment
+  // load nav content directly to preserve nested list structure
   const navMeta = getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
-  const fragment = await loadFragment(navPath);
+  let resp = await fetch('/content/nav.plain.html');
+  if (!resp.ok) {
+    resp = await fetch(`${navPath}.plain.html`);
+  }
+  if (!resp.ok) return;
+  const html = await resp.text();
+  await ensureDOMPurify();
+  const fragment = document.createElement('div');
+  fragment.innerHTML = window.DOMPurify.sanitize(html, DOMPURIFY);
 
   // decorate nav DOM
   block.textContent = '';
@@ -193,11 +201,22 @@ export default async function decorate(block) {
   const classes = ['brand', 'sections', 'tools'];
   classes.forEach((c, i) => {
     const section = nav.children[i];
-    if (section) section.classList.add(`nav-${c}`);
+    if (section) {
+      section.classList.add(`nav-${c}`);
+      section.classList.add('section');
+      section.setAttribute('data-section-status', 'loaded');
+      // wrap direct children in default-content-wrapper if not already wrapped
+      if (!section.querySelector('.default-content-wrapper')) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'default-content-wrapper';
+        while (section.firstChild) wrapper.append(section.firstChild);
+        section.append(wrapper);
+      }
+    }
   });
 
   const navBrand = nav.querySelector('.nav-brand');
-  const brandLink = navBrand.querySelector('.button');
+  const brandLink = navBrand?.querySelector('a.button');
   if (brandLink) {
     brandLink.className = '';
     brandLink.closest('.button-container').className = '';
@@ -219,6 +238,17 @@ export default async function decorate(block) {
       buttonContainer.classList.remove('button-container');
       buttonContainer.querySelector('.button').classList.remove('button');
     });
+
+    // close dropdowns when search bar becomes sticky
+    const searchForm = document.querySelector('.search-form-wrapper');
+    if (searchForm) {
+      const observer = new MutationObserver(() => {
+        if (isDesktop.matches && searchForm.classList.contains('is-stuck')) {
+          toggleAllNavSections(navSections, false);
+        }
+      });
+      observer.observe(searchForm, { attributes: true, attributeFilter: ['class'] });
+    }
   }
 
   const navTools = nav.querySelector('.nav-tools');
@@ -227,6 +257,93 @@ export default async function decorate(block) {
     if (search && search.textContent === '') {
       search.setAttribute('aria-label', 'Search');
     }
+    // replace <img> icons with MiIcons font icons
+    const miIconMap = new Map([
+      ['help', '\uE948'],
+      ['globe', '\uE9CB'],
+      ['trips', '\uE95B'],
+      ['account', '\uE955'],
+    ]);
+    navTools.querySelectorAll('li a img').forEach((img) => {
+      const iconName = (img.src.split('/').pop() || '').replace('.svg', '');
+      const charCode = miIconMap.get(iconName);
+      if (charCode) {
+        const span = document.createElement('span');
+        span.className = `icon icon-${iconName}`;
+        span.textContent = charCode;
+        img.replaceWith(span);
+      }
+    });
+  }
+
+  // build dropdown panel: 3-column flex (col1 links, col2 links, promo)
+  if (navSections) {
+    navSections.querySelectorAll('.default-content-wrapper > ul > li > ul').forEach((subUl) => {
+      const parent = subUl.parentElement;
+      const panel = document.createElement('div');
+      panel.className = 'nav-drop-panel';
+
+      const promoDiv = document.createElement('div');
+      promoDiv.className = 'nav-promo';
+      const regularItems = [];
+
+      [...subUl.children].forEach((li) => {
+        const a = li.querySelector(':scope > a');
+        if (a && a.querySelector('img') && a.querySelector('strong') && a.querySelector('em')) {
+          promoDiv.append(...li.childNodes);
+        } else {
+          regularItems.push(li);
+        }
+      });
+
+      if (promoDiv.childNodes.length) {
+        // standard dropdown: 2 link columns + promo sidebar
+        const col1 = document.createElement('ul');
+        const col2 = document.createElement('ul');
+        const half = Math.ceil(regularItems.length / 2);
+        regularItems.forEach((li, i) => {
+          if (i < half) col1.append(li);
+          else col2.append(li);
+        });
+        panel.append(col1);
+        panel.append(col2);
+        panel.append(promoDiv);
+      } else {
+        // brands-style dropdown: flat grid of all items (no promo)
+        panel.classList.add('nav-brands-grid');
+        const gridUl = document.createElement('ul');
+        regularItems.forEach((li) => gridUl.append(li));
+        panel.append(gridUl);
+
+        // footer bar: Explore All Brands + Close
+        const footer = document.createElement('div');
+        footer.className = 'nav-drop-footer';
+        const explore = document.createElement('a');
+        explore.href = '/marriott-brands.mi';
+        explore.className = 'nav-drop-explore';
+        explore.textContent = 'Explore All Brands ';
+        const arrow = document.createElement('span');
+        arrow.textContent = '\u2192';
+        explore.append(arrow);
+
+        const close = document.createElement('button');
+        close.type = 'button';
+        close.className = 'nav-drop-close';
+        const xIcon = document.createElement('span');
+        xIcon.textContent = '\u2715';
+        close.append(xIcon);
+        close.append(document.createTextNode(' Close'));
+        close.addEventListener('click', () => {
+          parent.setAttribute('aria-expanded', 'false');
+        });
+
+        footer.append(explore);
+        footer.append(close);
+        panel.append(footer);
+      }
+
+      parent.append(panel);
+    });
   }
 
   // hamburger for mobile
