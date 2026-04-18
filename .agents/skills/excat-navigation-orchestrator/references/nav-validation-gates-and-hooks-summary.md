@@ -10,14 +10,14 @@ This document maps the current navigation orchestrator policy (4 key critique co
 
 | Enforcement | Where | What it does |
 |-------------|--------|----------------|
-| **KEY_CRITIQUE_IDS** | `hooks/nav-validation-gates/checks.js` | `KEY_CRITIQUE_IDS_DESKTOP` = 2 IDs; `KEY_CRITIQUE_IDS_MOBILE` = 2 IDs. Used by `checkStyleRegister` and `checkMobileRegisters`. |
-| **checkStyleRegister** | `checks.js` | Requires style-register to exist; `allValidated` true; no component `pending`; each validated component `lastSimilarity >= 95%`; both desktop key IDs present and `status: "validated"`; runs `checkCritiqueProof` (report + screenshots + iterations on disk). |
-| **checkMobileRegisters** | `checks.js` | When phase-4 exists: requires mobile-style-register; `allValidated` true; no mobile component `pending`; both mobile key IDs present and `status: "validated"`; validated components ≥95%; runs same semantics for mobile. |
-| **checkCritiqueProof** | `checks.js` | For every component with `status: "validated"` in style-register: critiqueReportPath (file exists), screenshotSourcePath (exists), screenshotMigratedPath (exists), critiqueIterations >= 1. |
-| **checkMobileCritiqueProof** | `checks.js` | Same for mobile-style-register validated components. |
-| **Gate 3+4** | `gate-table.js` | When **style-register.json** is written: runs `checkCritiqueProof`. Blocks if any validated component lacks proof. |
-| **Gate 7-8-12** | `gate-table.js` | When **mobile-style-register.json** is written: runs `checkMobileCritiqueProof`; also checks mobile-schema-register and mobile-heading-coverage exist and allCovered. |
-| **Stop check** | `nav-validation-gate.js` | At session end: runs `checkStyleRegister`, `checkMobileRegisters`, `checkMobileCritiqueProof`. Also: **no `pending`** in style-register (replaced old "all components must be validated" with "pending not allowed"). |
+| **KEY_CRITIQUE_IDS** | `.agents/hooks/nav-validation-gates/checks.js` | `KEY_CRITIQUE_IDS_DESKTOP` = 2 IDs; `KEY_CRITIQUE_IDS_MOBILE` = 2 IDs. Used by `checkStyleRegister` and `checkMobileRegisters`. |
+| **checkStyleRegister** | `.agents/hooks/nav-validation-gates/checks.js` | Requires style-register to exist; `allValidated` true; no component `pending`; each validated component `lastSimilarity >= 95%`; both desktop key IDs present and `status: "validated"`; runs `checkCritiqueProof` (report + screenshots + iterations on disk). |
+| **checkMobileRegisters** | `.agents/hooks/nav-validation-gates/checks.js` | When phase-4 exists: requires mobile-style-register; `allValidated` true; no mobile component `pending`; both mobile key IDs present and `status: "validated"`; validated components ≥95%; runs same semantics for mobile. |
+| **checkCritiqueProof** | `.agents/hooks/nav-validation-gates/checks.js` | For every component with `status: "validated"` in style-register: critiqueReportPath (file exists), screenshotSourcePath (exists), screenshotMigratedPath (exists), critiqueIterations >= 1. |
+| **checkMobileCritiqueProof** | `.agents/hooks/nav-validation-gates/checks.js` | Same for mobile-style-register validated components. |
+| **Gate 3+4** | `.agents/hooks/nav-validation-gates/gate-table.js` | When **style-register.json** is written: runs `checkCritiqueProof`. Blocks if any validated component lacks proof. |
+| **Gate 7-8-12** | `.agents/hooks/nav-validation-gates/gate-table.js` | When **mobile-style-register.json** is written: runs `checkMobileCritiqueProof`; also checks mobile-schema-register and mobile-heading-coverage exist and allCovered. |
+| **Stop check** | `.agents/hooks/nav-validation-gate.js` | At session end: runs `checkStyleRegister`, `checkMobileRegisters`, `checkMobileCritiqueProof`. Also: **no `pending`** in style-register (replaced old "all components must be validated" with "pending not allowed"). |
 | **Schema** | `references/style-register-schema.json` | `status` enum includes `"skipped"`. `allValidated` description updated: true when 4 key are validated; rest may be skipped. |
 
 ---
@@ -28,9 +28,9 @@ This document maps the current navigation orchestrator policy (4 key critique co
 
 | Enforcement | Where | What it does |
 |-------------|--------|----------------|
-| **Gate 14** | `gate-table.js` | When **phase-4-mobile.json** is written: hasSearchForm, hasLocaleSelector (14/14b); **Gate 14c**: every `mobileMenuItems` entry must have `splitLinkPattern`; **Gate 14d**: `menuItemsWidthLayout` required (full-width-flush \| centered-with-margins \| constrained-max-width \| unknown). Logs `[MOBILE] phase-4 menuItemsWidthLayout validated` to debug.log. |
-| **Stop check** | `nav-validation-gate.js` | When phase-4 exists: validates `menuItemsWidthLayout` present and valid; logs `[MOBILE] phase-4 menuItemsWidthLayout: <value>` to debug.log. |
-| **Dashboard** | `workflow-progress.js` | WORKFLOW PROGRESS DASHBOARD includes `menuItemsWidthLayout: <value>` under MOBILE when phase-4 exists. |
+| **Gate 14** | `.agents/hooks/nav-validation-gates/gate-table.js` | When **phase-4-mobile.json** is written: hasSearchForm, hasLocaleSelector (14/14b); **Gate 14c**: every `mobileMenuItems` entry must have `splitLinkPattern`; **Gate 14d**: `menuItemsWidthLayout` required (full-width-flush \| centered-with-margins \| constrained-max-width \| unknown). Logs `[MOBILE] phase-4 menuItemsWidthLayout validated` to debug.log. |
+| **Stop check** | `.agents/hooks/nav-validation-gate.js` | When phase-4 exists: validates `menuItemsWidthLayout` present and valid; logs `[MOBILE] phase-4 menuItemsWidthLayout: <value>` to debug.log. |
+| **Dashboard** | `.agents/hooks/nav-validation-gates/workflow-progress.js` | WORKFLOW PROGRESS DASHBOARD includes `menuItemsWidthLayout: <value>` under MOBILE when phase-4 exists. |
 | **Schema** | `references/mobile-navigation-agent-schema.json` | `mobileMenuItems.items` required includes `"splitLinkPattern"`; `splitLinkPattern` required `["textClickBehavior", "chevronClickBehavior"]`; top-level `menuItemsWidthLayout` required. |
 
 ---
@@ -53,9 +53,9 @@ This document maps the current navigation orchestrator policy (4 key critique co
 | Enforcement | Where | What it does |
 |-------------|--------|----------------|
 | **pre-completion-check.js** | `migration-work/navigation-validation/scripts/pre-completion-check.js` | Standalone script: checks style-register + mobile-style-register for 4 key components (status validated, lastSimilarity ≥ 95, critique proof on disk). Exit 0 = safe to announce; exit 1 = block completion message. SKILL Step 15 mandates run before report. |
-| **checkStyleRegister / checkMobileRegisters** | `checks.js` | For any component with `status: "validated"`, errors if `lastSimilarity < SIMILARITY_THRESHOLD` (95). |
-| **checkCritiqueProof / checkMobileCritiqueProof** | `checks.js` | Validated components must have report + both screenshots on disk and critiqueIterations >= 1. |
-| **Stop check** | `nav-validation-gate.js` | Runs the above; when block occurs, appends `[HOOK:PREMATURE-COMPLETION]` to debug.log for audit. Session cannot pass until resolved. |
+| **checkStyleRegister / checkMobileRegisters** | `.agents/hooks/nav-validation-gates/checks.js` | For any component with `status: "validated"`, errors if `lastSimilarity < SIMILARITY_THRESHOLD` (95). |
+| **checkCritiqueProof / checkMobileCritiqueProof** | `.agents/hooks/nav-validation-gates/checks.js` | Validated components must have report + both screenshots on disk and critiqueIterations >= 1. |
+| **Stop check** | `.agents/hooks/nav-validation-gate.js` | Runs the above; when block occurs, appends `[HOOK:PREMATURE-COMPLETION]` to debug.log for audit. Session cannot pass until resolved. |
 
 ---
 
@@ -87,8 +87,8 @@ This document maps the current navigation orchestrator policy (4 key critique co
 | Enforcement | Where | What it does |
 |-------------|--------|----------------|
 | **mobile-dimensional-gate.js** | `migration-work/navigation-validation/scripts/mobile-dimensional-gate.js` | Standalone script: set viewport 375×812, open hamburger, run getBoundingClientRect/getComputedStyle. 7 categories, 24 checks: menu list width = viewport, each nav-item width = viewport, edge-to-edge alignment, chevron alignment, container chain widths, computed font-size/weight, secondary nav width. Writes `mobile/mobile-dimensional-gate-report.json` when `--validation-dir` is set. Exit 0 = pass, 1 = fail, 2 = usage/runner error. |
-| **Gate 7-8-12 (PostToolUse)** | `gate-table.js` | When **mobile-style-register.json** is written: runs `checkMobileDimensionalGate(workspaceRoot)`. Blocks until `mobile/mobile-dimensional-gate-report.json` exists and `passed === true`. LLM cannot build mobile style register until the script has been run and passed. |
-| **Stop check** | `nav-validation-gate.js` + `checks.js` | When phase-4 exists: runs `checkMobileDimensionalGate`. If report missing or `passed !== true`, blocks session end with remediation (run script, fix CSS, re-run until exit 0). |
+| **Gate 7-8-12 (PostToolUse)** | `.agents/hooks/nav-validation-gates/gate-table.js` | When **mobile-style-register.json** is written: runs `checkMobileDimensionalGate(workspaceRoot)`. Blocks until `mobile/mobile-dimensional-gate-report.json` exists and `passed === true`. LLM cannot build mobile style register until the script has been run and passed. |
+| **Stop check** | `.agents/hooks/nav-validation-gate.js` + `.agents/hooks/nav-validation-gates/checks.js` | When phase-4 exists: runs `checkMobileDimensionalGate`. If report missing or `passed !== true`, blocks session end with remediation (run script, fix CSS, re-run until exit 0). |
 | **SKILL** | Step 12 (mobile validation) + Step 15 checklist | Run `node migration-work/navigation-validation/scripts/mobile-dimensional-gate.js --url=<migrated-url> [--validation-dir=...]` before building style registers (Step 13). Step 15: confirm gate passed — hook enforces this. |
 | **browser_evaluate** | During migration | Paste `runGate(375)` (or runGate with config) into Playwright/browser_evaluate after opening the mobile menu; helpers must be injected — see script header. |
 
@@ -125,7 +125,7 @@ This document maps the current navigation orchestrator policy (4 key critique co
 
 ## 9. Files touched in this set of changes
 
-- **Hooks:** `nav-validation-gates/checks.js`, `nav-validation-gates/gate-table.js`, `nav-validation-gate.js`, `nav-validation-gates/workflow-progress.js`
+- **Hooks:** `.agents/hooks/nav-validation-gates/checks.js`, `.agents/hooks/nav-validation-gates/gate-table.js`, `.agents/hooks/nav-validation-gate.js`, `.agents/hooks/nav-validation-gates/workflow-progress.js`
 - **Schemas:** `references/style-register-schema.json`, `references/mobile-navigation-agent-schema.json` (splitLinkPattern already required)
 - **Skill:** `SKILL.md` (Steps 12, 14, 15; completion message; skipped-component instruction; mobile-dimensional-gate)
 - **Scripts:** `migration-work/navigation-validation/scripts/mobile-dimensional-gate.js` (live DOM width checks; run before Step 13 / completion)

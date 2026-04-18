@@ -225,9 +225,43 @@ export default async function decorate(block) {
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
-      if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
-      navSection.addEventListener('click', () => {
+      const hasDropdown = !!navSection.querySelector('ul');
+      if (hasDropdown) {
+        navSection.classList.add('nav-drop');
+
+        // Wrap the top-level text node as a clickable span (not a link)
+        const link = navSection.querySelector(':scope > a');
+        if (!link) {
+          // Text-only dropdown trigger — wrap first text in a span
+          const label = document.createElement('span');
+          label.className = 'nav-drop-label';
+          label.textContent = getDirectTextContent(navSection);
+          // Remove the bare text node
+          [...navSection.childNodes].forEach((n) => {
+            if (n.nodeType === Node.TEXT_NODE && n.textContent.trim()) n.remove();
+          });
+          navSection.prepend(label);
+        }
+      }
+      // Add close button to dropdown
+      if (hasDropdown) {
+        const subUl = navSection.querySelector(':scope > ul');
+        if (subUl && !subUl.querySelector('.nav-close')) {
+          const closeBtn = document.createElement('button');
+          closeBtn.className = 'nav-close';
+          closeBtn.type = 'button';
+          closeBtn.setAttribute('aria-label', 'Close');
+          closeBtn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            navSection.setAttribute('aria-expanded', 'false');
+          });
+          subUl.prepend(closeBtn);
+        }
+      }
+
+      navSection.addEventListener('click', (e) => {
         if (isDesktop.matches) {
+          if (hasDropdown) e.preventDefault();
           const expanded = navSection.getAttribute('aria-expanded') === 'true';
           toggleAllNavSections(navSections);
           navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');

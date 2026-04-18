@@ -302,6 +302,7 @@ header nav .nav-sections ul > li > ul > li {
     border-bottom: 0.1875rem solid transparent;
   }
 
+  /* Dropdown panels — hidden by default */
   header nav .nav-sections .default-content-wrapper > ul > li > ul {
     display: none;
     position: relative;

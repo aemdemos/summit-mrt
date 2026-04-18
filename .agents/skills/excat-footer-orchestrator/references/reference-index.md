@@ -27,6 +27,6 @@
 | **Mobile behavior compare** | `scripts/compare-footer-mobile-behavior.js` — `phase-4-mobile.json` vs `mobile/migrated-mobile-behavior-mapping.json` → `mobile/mobile-behavior-register.json` |
 | **JSON schema gate (sub-agents)** | `scripts/validate-output.js` — `node validate-output.js <output.json> <schema.json>` (requires `npm install` in `scripts/`) |
 | **Pre-completion** | `scripts/pre-completion-check.js` — before completion message |
-| **Enforcement** | `hooks/footer-validation-gate.js` — PostToolUse + Stop; logs to `migration-work/footer-validation/debug.log` |
+| **Enforcement** | `.agents/hooks/footer-validation-gate.js` — PostToolUse + Stop; logs to `migration-work/footer-validation/debug.log` |
 | **Element handling** | `references/element-handling-guide.md` |
 | **Debug log** | `migration-work/footer-validation/debug.log` |

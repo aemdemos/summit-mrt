@@ -60,7 +60,7 @@ Observe the source footer's visual properties:
 - **Optional (only if applicable):** `primaryLinkBand` — **MANDATORY when** the main footer nav uses multiple parallel link columns and/or accordions: **`desktopLinkLayoutPattern`** and **`desktopVisibleLinkColumnsApprox`** (count parallel vertical link stacks at desktop — e.g. seven static columns vs two-region split must not be conflated)
 - **Optional (only if applicable):** `noticeStrip` — distinct legal, certification, or disclaimer block: layout (full-width bar vs inset card vs in-column), background treatment, mark/emblem position
 
-Omit optional objects entirely when the footer does not have that pattern. Write `footer-appearance-mapping.json` conforming to `references/footer-appearance-mapping-schema.json`. The hook **blocks `footer.css`** until `layoutSpacing` is complete (see `footer-validation-gates`).
+Omit optional objects entirely when the footer does not have that pattern. Write `footer-appearance-mapping.json` conforming to `references/footer-appearance-mapping-schema.json`. The hook **blocks `footer.css`** until `layoutSpacing` is complete (see `.agents/hooks/footer-validation-gates/`).
 
 ### Phase 2c: Footer Elements Mapping
 

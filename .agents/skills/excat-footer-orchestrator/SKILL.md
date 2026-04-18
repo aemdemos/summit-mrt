@@ -309,7 +309,7 @@ Invoke `validation-agent` sub-agent. At **375×812**:
 ## Enforcement (Two Layers — Script + Hook)
 
 - **Layer 1 — Scripts:** Deterministic validation (content, images, desktop + mobile structural/behavior compares, appearance comparison, pre-completion). Exit non-zero = do not proceed.
-- **Layer 2 — Hook:** `hooks/footer-validation-gate.js` — PostToolUse gates + Stop checks covering desktop + mobile. Logs to `migration-work/footer-validation/debug.log` with WORKFLOW PROGRESS DASHBOARD.
+- **Layer 2 — Hook:** `.agents/hooks/footer-validation-gate.js` — PostToolUse gates + Stop checks covering desktop + mobile. Logs to `migration-work/footer-validation/debug.log` with WORKFLOW PROGRESS DASHBOARD.
 
 ## Sub-Agents
 
