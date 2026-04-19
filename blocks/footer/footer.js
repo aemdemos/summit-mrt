@@ -32,10 +32,25 @@ export default async function decorate(block) {
     footer.append(section);
   });
 
-  // First section: 4-column link grid — tag it for CSS
+  // First section: 4-column link grid
   const linkGrid = footer.querySelector('.footer-section');
   if (linkGrid) {
     linkGrid.classList.add('footer-links');
+    // If published endpoint flattened inner <div> wrappers, re-group
+    // each <p><strong>heading</strong></p> + <ul> pair into a column div
+    if (!linkGrid.querySelector(':scope > div')) {
+      const items = [...linkGrid.children];
+      let col = null;
+      items.forEach((el) => {
+        if (el.tagName === 'P' && el.querySelector('strong')) {
+          col = document.createElement('div');
+          linkGrid.append(col);
+          col.append(el);
+        } else if (col) {
+          col.append(el);
+        }
+      });
+    }
   }
 
   // Top Destinations accordion
