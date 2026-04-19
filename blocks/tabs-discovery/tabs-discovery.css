@@ -42,14 +42,16 @@ main .tabs-discovery .tabs-discovery-list {
 main .tabs-discovery .tabs-discovery-list button {
   flex: 0 0 auto;
   margin: 0;
+  margin-right: 32px;
   border: none;
-  border-bottom: 2px solid transparent;
+  border-bottom: 0.1875rem solid transparent;
   border-radius: 0;
-  padding: 0.75em 1.25em;
+  padding: 0;
+  padding-bottom: 0.5rem;
   background: transparent;
   color: rgb(255 255 255 / 70%);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.4;
   cursor: pointer;
   white-space: nowrap;
@@ -174,10 +176,24 @@ main .tabs-discovery .discovery-card-eyebrow::before {
 
 /* Card title */
 main .tabs-discovery .discovery-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 18px;
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 0.5rem;
+}
+
+main .tabs-discovery .discovery-card-title::after {
+  content: '';
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentcolor;
+  border-bottom: 2px solid currentcolor;
+  transform: rotate(-45deg);
+  margin-left: 8px;
 }
 
 /* Card description - hidden by default, fades in on hover */

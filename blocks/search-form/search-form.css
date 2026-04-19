@@ -108,24 +108,18 @@ main .search-field input {
   font-family: inherit;
 }
 
-/* Icons — inline with label */
+/* Icons — MiIcons font, inline with label */
 main .search-field-icon {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
+  /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+  font-family: MiIcons;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  color: #c4512b;
   flex-shrink: 0;
-}
-
-main .search-icon-pin {
-  background: currentcolor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z'/%3E%3C/svg%3E") center / contain no-repeat;
-  color: #c4512b;
-}
-
-main .search-icon-calendar {
-  background: currentcolor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/%3E%3C/svg%3E") center / contain no-repeat;
-  color: #c4512b;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Submit button — equal width with fields */
