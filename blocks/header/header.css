@@ -311,6 +311,7 @@ header nav .nav-sections ul > li > ul > li {
   /* dropdown panel: flex container for links-area + promo sidebar */
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > .nav-drop-panel {
     display: flex;
+    flex-wrap: wrap;
     gap: 24px;
     position: absolute;
     left: 50%;
@@ -466,11 +467,19 @@ header nav .nav-sections ul > li > ul > li {
     filter: grayscale(100%) invert(1) brightness(2);
   }
 
-  /* brands dropdown footer */
+  /* dropdown footer — close button row */
   .nav-drop-footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
+    width: 100%;
+    margin-top: 16px;
+    padding-top: 12px;
+  }
+
+  /* brands footer: space-between for Explore All Brands + Close */
+  .nav-brands-grid > .nav-drop-footer {
+    justify-content: space-between;
     margin-top: 24px;
     padding-top: 16px;
   }
@@ -490,18 +499,17 @@ header nav .nav-sections ul > li > ul > li {
     margin-left: 4px;
   }
 
-  .nav-drop-close {
+  .nav-drop-close,
+  .nav-drop-close:hover,
+  .nav-drop-close:focus {
     font-size: 14px;
     font-weight: 400;
     color: #666;
     background: none;
     border: none;
+    box-shadow: none;
     cursor: pointer;
     padding: 0;
-  }
-
-  .nav-drop-close:hover {
-    color: #666;
   }
 
   .nav-drop-close span {
@@ -549,7 +557,7 @@ header nav .nav-tools li:last-child a {
   white-space: nowrap;
 }
 
-header nav .nav-tools .icon {
+header nav .nav-tools .mi-icon {
   font-family: MiIcons, sans-serif;
   font-size: 20px;
   line-height: 1;
