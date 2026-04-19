@@ -1,4 +1,4 @@
-import { getMetadata, DOMPURIFY } from '../../scripts/aem.js';
+import { getMetadata } from '../../scripts/aem.js';
 import { ensureDOMPurify } from '../../scripts/scripts.js';
 
 // media query match that indicates mobile/tablet width
@@ -179,9 +179,14 @@ async function buildBreadcrumbs() {
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
+  // prevent double decoration
+  if (block.querySelector('nav#nav')) return;
+
   // load nav content directly to preserve nested list structure
   const navMeta = getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
+  // Try raw content file first (preserves full nested structure, e.g. Brands dropdown).
+  // Fall back to AEM-processed path for published sites where /content/ doesn't exist.
   let resp = await fetch('/content/nav.plain.html');
   if (!resp.ok) {
     resp = await fetch(`${navPath}.plain.html`);
@@ -189,14 +194,16 @@ export default async function decorate(block) {
   if (!resp.ok) return;
   const html = await resp.text();
   await ensureDOMPurify();
-  const fragment = document.createElement('div');
-  fragment.innerHTML = window.DOMPurify.sanitize(html, DOMPURIFY);
+  const fragment = window.DOMPurify.sanitize(html, {
+    USE_PROFILES: { html: true },
+    RETURN_DOM: true,
+  });
 
   // decorate nav DOM
   block.textContent = '';
   const nav = document.createElement('nav');
   nav.id = 'nav';
-  while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
+  [...fragment.children].forEach((child) => nav.append(child));
 
   const classes = ['brand', 'sections', 'tools'];
   classes.forEach((c, i) => {
@@ -206,11 +213,18 @@ export default async function decorate(block) {
       section.classList.add('section');
       section.setAttribute('data-section-status', 'loaded');
       // wrap direct children in default-content-wrapper if not already wrapped
-      if (!section.querySelector('.default-content-wrapper')) {
+      const existingWrapper = section.querySelector('.default-content-wrapper');
+      if (!existingWrapper) {
         const wrapper = document.createElement('div');
         wrapper.className = 'default-content-wrapper';
         while (section.firstChild) wrapper.append(section.firstChild);
         section.append(wrapper);
+      } else {
+        // AEM may have pre-wrapped — ensure only one wrapper exists
+        while (existingWrapper.nextElementSibling?.classList?.contains('default-content-wrapper')) {
+          existingWrapper.append(...existingWrapper.nextElementSibling.childNodes);
+          existingWrapper.nextElementSibling.remove();
+        }
       }
     }
   });
@@ -241,21 +255,6 @@ export default async function decorate(block) {
             if (n.nodeType === Node.TEXT_NODE && n.textContent.trim()) n.remove();
           });
           navSection.prepend(label);
-        }
-      }
-      // Add close button to dropdown
-      if (hasDropdown) {
-        const subUl = navSection.querySelector(':scope > ul');
-        if (subUl && !subUl.querySelector('.nav-close')) {
-          const closeBtn = document.createElement('button');
-          closeBtn.className = 'nav-close';
-          closeBtn.type = 'button';
-          closeBtn.setAttribute('aria-label', 'Close');
-          closeBtn.addEventListener('click', (ev) => {
-            ev.stopPropagation();
-            navSection.setAttribute('aria-expanded', 'false');
-          });
-          subUl.prepend(closeBtn);
         }
       }
 
@@ -291,21 +290,22 @@ export default async function decorate(block) {
     if (search && search.textContent === '') {
       search.setAttribute('aria-label', 'Search');
     }
-    // replace <img> icons with MiIcons font icons
+    // remove any EDS-injected icon spans and inject MiIcons font icons
+    navTools.querySelectorAll('span.icon').forEach((s) => s.remove());
     const miIconMap = new Map([
-      ['help', '\uE948'],
-      ['globe', '\uE9CB'],
-      ['trips', '\uE95B'],
-      ['account', '\uE955'],
+      ['Help', '\uE948'],
+      ['English', '\uE9CB'],
+      ['Trips', '\uE95B'],
+      ['Sign In or Join', '\uE955'],
     ]);
-    navTools.querySelectorAll('li a img').forEach((img) => {
-      const iconName = (img.src.split('/').pop() || '').replace('.svg', '');
-      const charCode = miIconMap.get(iconName);
-      if (charCode) {
+    navTools.querySelectorAll('li a').forEach((a) => {
+      const text = a.textContent.trim();
+      const charCode = miIconMap.get(text);
+      if (charCode && !a.querySelector('.mi-icon')) {
         const span = document.createElement('span');
-        span.className = `icon icon-${iconName}`;
+        span.className = 'mi-icon';
         span.textContent = charCode;
-        img.replaceWith(span);
+        a.prepend(span);
       }
     });
   }
@@ -314,6 +314,8 @@ export default async function decorate(block) {
   if (navSections) {
     navSections.querySelectorAll('.default-content-wrapper > ul > li > ul').forEach((subUl) => {
       const parent = subUl.parentElement;
+      // skip if panel already built (prevents doubling on re-decoration)
+      if (parent.querySelector('.nav-drop-panel')) return;
       const panel = document.createElement('div');
       panel.className = 'nav-drop-panel';
 
@@ -342,11 +344,65 @@ export default async function decorate(block) {
         panel.append(col1);
         panel.append(col2);
         panel.append(promoDiv);
+
+        // close button at bottom-right
+        const closeRow = document.createElement('div');
+        closeRow.className = 'nav-drop-footer';
+        const close = document.createElement('button');
+        close.type = 'button';
+        close.className = 'nav-drop-close';
+        const xIcon = document.createElement('span');
+        xIcon.textContent = '\u2715';
+        close.append(xIcon);
+        close.append(document.createTextNode(' Close'));
+        close.addEventListener('click', () => {
+          parent.setAttribute('aria-expanded', 'false');
+        });
+        closeRow.append(close);
+        panel.append(closeRow);
       } else {
         // brands-style dropdown: flat grid of all items (no promo)
         panel.classList.add('nav-brands-grid');
         const gridUl = document.createElement('ul');
-        regularItems.forEach((li) => gridUl.append(li));
+        const brandSlugs = new Map([
+          ['Edition', 'edition'], ['The Ritz-Carlton', 'ritz-carlton'],
+          ['The Luxury Collection', 'luxury-collection'], ['St. Regis', 'st-regis'],
+          ['W Hotels', 'w-hotels'], ['JW Marriott', 'jw-marriott'],
+          ['Marriott Hotels', 'marriott-hotels'], ['Sheraton', 'sheraton'],
+          ['The Marriott Vacation Clubs', 'marriott-vacation-clubs'],
+          ['Delta Hotels', 'delta-hotels'], ['Westin', 'westin'],
+          ['Le Meridien', 'le-meridien'], ['Renaissance Hotels', 'renaissance'],
+          ['Autograph Collection Hotels', 'autograph-collection'],
+          ['Tribute Portfolio', 'tribute-portfolio'], ['Design Hotels', 'design-hotels'],
+          ['Gaylord Hotels', 'gaylord-hotels'], ['MGM Collection', 'mgm-collection'],
+          ['Outdoor Collection', 'outdoor-collection'], ['Courtyard', 'courtyard'],
+          ['Four Points', 'four-points'], ['SpringHill Suites', 'springhill-suites'],
+          ['Fairfield', 'fairfield'], ['AC Hotels', 'ac-hotels'],
+          ['citizenM', 'citizenm'], ['Aloft Hotels', 'aloft-hotels'],
+          ['Moxy Hotels', 'moxy-hotels'], ['Protea Hotels', 'protea-hotels'],
+          ['City Express', 'city-express'], ['Four Points Flex', 'four-points-flex'],
+          ['Series by Marriott', 'series'], ['Residence Inn', 'residence-inn'],
+          ['TownePlace Suites', 'towneplace-suites'], ['Element', 'element'],
+          ['StudioRes', 'studiores'], ['Marriott Executive Apartments', 'executive-apartments'],
+          ['Homes & Villas', 'homes-villas'],
+          ['Apartments by Marriott Bonvoy', 'apartments-marriott'],
+        ]);
+        regularItems.forEach((li) => {
+          const a = li.querySelector('a');
+          if (a && !a.querySelector('img')) {
+            const text = a.textContent.trim();
+            const slug = brandSlugs.get(text);
+            if (slug) {
+              const img = document.createElement('img');
+              img.src = `/content/icons/brands/${slug}.svg`;
+              img.alt = text;
+              img.loading = 'lazy';
+              a.textContent = '';
+              a.append(img);
+            }
+          }
+          gridUl.append(li);
+        });
         panel.append(gridUl);
 
         // footer bar: Explore All Brands + Close
