@@ -277,16 +277,16 @@ export default async function decorate(block) {
       buttonContainer.querySelector('.button').classList.remove('button');
     });
 
-    // close dropdowns when search bar becomes sticky
-    const searchForm = document.querySelector('.search-form-wrapper');
-    if (searchForm) {
-      const observer = new MutationObserver(() => {
-        if (isDesktop.matches && searchForm.classList.contains('is-stuck')) {
-          toggleAllNavSections(navSections, false);
-        }
-      });
-      observer.observe(searchForm, { attributes: true, attributeFilter: ['class'] });
-    }
+    // close dropdowns when the bottom of the open panel scrolls past the viewport top
+    window.addEventListener('scroll', () => {
+      if (!isDesktop.matches) return;
+      const openPanel = navSections.querySelector('[aria-expanded="true"] > .nav-drop-panel');
+      if (!openPanel) return;
+      const panelBottom = openPanel.getBoundingClientRect().bottom;
+      if (panelBottom <= 0) {
+        toggleAllNavSections(navSections, false);
+      }
+    }, { passive: true });
   }
 
   const navTools = nav.querySelector('.nav-tools');
