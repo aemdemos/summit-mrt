@@ -71,11 +71,31 @@ export default async function decorate(block) {
     }
   });
 
-  // Social links section
+  // Social links section — replace text with SVG icons
+  const socialIcons = new Map([
+    ['Facebook', 'facebook'],
+    ['Instagram', 'instagram'],
+    ['X', 'x'],
+    ['LinkedIn', 'linkedin'],
+    ['YouTube', 'youtube'],
+  ]);
   footer.querySelectorAll('.footer-section').forEach((section) => {
     const heading = section.querySelector('p > strong');
     if (heading && heading.textContent.trim() === 'Follow Marriott Bonvoy') {
       section.classList.add('footer-social');
+      section.querySelectorAll('li a').forEach((a) => {
+        const slug = socialIcons.get(a.textContent.trim());
+        if (slug) {
+          const img = document.createElement('img');
+          img.src = `/icons/${slug}.svg`;
+          img.alt = a.textContent.trim();
+          img.width = 24;
+          img.height = 24;
+          img.loading = 'lazy';
+          a.textContent = '';
+          a.append(img);
+        }
+      });
     }
   });
 

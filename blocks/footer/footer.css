@@ -64,7 +64,7 @@ footer .footer .footer-accordion {
   border-top: 1px solid #333;
   max-width: var(--footer-max-width);
   margin: auto;
-  padding: 0 24px;
+  padding: 0;
 }
 
 footer .footer .footer-accordion p {
@@ -100,8 +100,7 @@ footer .footer .footer-accordion ul {
   list-style: none;
   padding: 0;
   margin: 0 0 24px;
-  display: flex;
-  flex-wrap: wrap;
+  columns: 4;
   gap: 8px 24px;
 }
 
@@ -120,6 +119,7 @@ footer .footer .footer-social {
   gap: 16px;
   border-top: 1px solid #333;
   padding-top: 24px;
+  padding-bottom: 24px;
   flex-wrap: wrap;
   max-width: var(--footer-max-width);
   margin: auto;
@@ -138,6 +138,22 @@ footer .footer .footer-social ul {
   gap: 16px;
 }
 
+footer .footer .footer-social li a {
+  display: flex;
+  align-items: center;
+}
+
+footer .footer .footer-social li a img {
+  width: 16px;
+  height: auto;
+  filter: brightness(0) invert(0.75);
+  transition: filter 0.2s ease;
+}
+
+footer .footer .footer-social li a:hover img {
+  filter: brightness(0) invert(1);
+}
+
 /* Section 4: Copyright row */
 footer .footer .footer-copyright {
   border-top: 1px solid #333;
@@ -150,15 +166,11 @@ footer .footer .footer-copyright {
 
 @media (width >= 900px) {
   footer .footer > div {
-    padding: var(--footer-padding-desktop);
+    padding: 0;
   }
 
   footer .footer .footer-links {
     grid-template-columns: repeat(4, 1fr);
-    padding: var(--footer-padding-desktop);
-  }
-
-  footer .footer .footer-accordion {
-    padding: 0 32px;
+    padding: 0 0 20px;
   }
 }
