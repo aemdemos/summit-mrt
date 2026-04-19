@@ -185,11 +185,11 @@ export default async function decorate(block) {
   // load nav content directly to preserve nested list structure
   const navMeta = getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
-  // Try raw content file first (preserves full nested structure, e.g. Brands dropdown).
-  // Fall back to AEM-processed path for published sites where /content/ doesn't exist.
-  let resp = await fetch('/content/nav.plain.html');
+  // Published sites: use AEM-served nav. Local dev: fall back to raw content file
+  // (aem-cli processing can strip large nested lists like Brands).
+  let resp = await fetch(`${navPath}.plain.html`);
   if (!resp.ok) {
-    resp = await fetch(`${navPath}.plain.html`);
+    resp = await fetch('/content/nav.plain.html');
   }
   if (!resp.ok) return;
   const html = await resp.text();
@@ -394,7 +394,7 @@ export default async function decorate(block) {
             const slug = brandSlugs.get(text);
             if (slug) {
               const img = document.createElement('img');
-              img.src = `/content/icons/brands/${slug}.svg`;
+              img.src = `/icons/brands/${slug}.svg`;
               img.alt = text;
               img.loading = 'lazy';
               a.textContent = '';
