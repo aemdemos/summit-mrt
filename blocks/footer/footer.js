@@ -1,24 +1,60 @@
 import { getMetadata } from '../../scripts/aem.js';
-import { loadFragment } from '../fragment/fragment.js';
+import { ensureDOMPurify } from '../../scripts/scripts.js';
 
 /**
  * loads and decorates the footer
  * @param {Element} block The footer block element
  */
 export default async function decorate(block) {
-  // load footer as fragment
+  // Fetch footer content directly to preserve nested div structure
+  // (loadFragment/decorateMain flattens inner divs on published endpoints)
   const footerMeta = getMetadata('footer');
   const footerPath = footerMeta ? new URL(footerMeta, window.location).pathname : '/footer';
-  const fragment = await loadFragment(footerPath);
+  let resp = await fetch(`${footerPath}.plain.html`);
+  if (!resp.ok) {
+    resp = await fetch('/content/footer.plain.html');
+  }
+  if (!resp.ok) return;
+  const html = await resp.text();
+  await ensureDOMPurify();
+  const fragment = window.DOMPurify.sanitize(html, {
+    USE_PROFILES: { html: true },
+    RETURN_DOM: true,
+  });
 
   // decorate footer DOM
   block.textContent = '';
   const footer = document.createElement('div');
-  while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
 
-  // Add accordion behavior for Top Destinations section
-  const sections = footer.querySelectorAll('.section');
-  sections.forEach((section) => {
+  // Each top-level <div> in footer.plain.html becomes a section
+  [...fragment.children].forEach((section) => {
+    section.classList.add('footer-section');
+    footer.append(section);
+  });
+
+  // First section: 4-column link grid
+  const linkGrid = footer.querySelector('.footer-section');
+  if (linkGrid) {
+    linkGrid.classList.add('footer-links');
+    // If published endpoint flattened inner <div> wrappers, re-group
+    // each <p><strong>heading</strong></p> + <ul> pair into a column div
+    if (!linkGrid.querySelector(':scope > div')) {
+      const items = [...linkGrid.children];
+      let col = null;
+      items.forEach((el) => {
+        if (el.tagName === 'P' && el.querySelector('strong')) {
+          col = document.createElement('div');
+          linkGrid.append(col);
+          col.append(el);
+        } else if (col) {
+          col.append(el);
+        }
+      });
+    }
+  }
+
+  // Top Destinations accordion
+  footer.querySelectorAll('.footer-section').forEach((section) => {
     const heading = section.querySelector('p > strong');
     if (heading && heading.textContent.trim() === 'Top Destinations') {
       section.classList.add('footer-accordion');
@@ -34,6 +70,41 @@ export default async function decorate(block) {
       }
     }
   });
+
+  // Social links section — replace text with SVG icons
+  const socialIcons = new Map([
+    ['Facebook', 'facebook'],
+    ['Instagram', 'instagram'],
+    ['X', 'x'],
+    ['LinkedIn', 'linkedin'],
+    ['YouTube', 'youtube'],
+  ]);
+  footer.querySelectorAll('.footer-section').forEach((section) => {
+    const heading = section.querySelector('p > strong');
+    if (heading && heading.textContent.trim() === 'Follow Marriott Bonvoy') {
+      section.classList.add('footer-social');
+      section.querySelectorAll('li a').forEach((a) => {
+        const slug = socialIcons.get(a.textContent.trim());
+        if (slug) {
+          const img = document.createElement('img');
+          img.src = `/icons/${slug}.svg`;
+          img.alt = a.textContent.trim();
+          img.width = 24;
+          img.height = 24;
+          img.loading = 'lazy';
+          a.textContent = '';
+          a.append(img);
+        }
+      });
+    }
+  });
+
+  // Copyright section (last)
+  const lastSection = footer.querySelector('.footer-section:last-child');
+  if (lastSection && !lastSection.classList.contains('footer-social')
+    && !lastSection.classList.contains('footer-accordion')) {
+    lastSection.classList.add('footer-copyright');
+  }
 
   block.append(footer);
 }
