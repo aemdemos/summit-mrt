@@ -185,11 +185,11 @@ export default async function decorate(block) {
   // load nav content directly to preserve nested list structure
   const navMeta = getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
-  // Try raw content file first (preserves full nested structure, e.g. Brands dropdown).
-  // Fall back to AEM-processed path for published sites where /content/ doesn't exist.
-  let resp = await fetch('/content/nav.plain.html');
+  // Published sites: use AEM-served nav. Local dev: fall back to raw content file
+  // (aem-cli processing can strip large nested lists like Brands).
+  let resp = await fetch(`${navPath}.plain.html`);
   if (!resp.ok) {
-    resp = await fetch(`${navPath}.plain.html`);
+    resp = await fetch('/content/nav.plain.html');
   }
   if (!resp.ok) return;
   const html = await resp.text();
@@ -250,9 +250,14 @@ export default async function decorate(block) {
           const label = document.createElement('span');
           label.className = 'nav-drop-label';
           label.textContent = getDirectTextContent(navSection);
-          // Remove the bare text node
+          // Remove all direct children except nested <ul> (handles text nodes,
+          // <p> wrappers, etc. that AEM may add on published endpoints)
           [...navSection.childNodes].forEach((n) => {
-            if (n.nodeType === Node.TEXT_NODE && n.textContent.trim()) n.remove();
+            if (n.nodeType === Node.TEXT_NODE) {
+              if (n.textContent.trim()) n.remove();
+            } else if (n.nodeType === Node.ELEMENT_NODE && n.tagName !== 'UL') {
+              n.remove();
+            }
           });
           navSection.prepend(label);
         }
@@ -272,16 +277,16 @@ export default async function decorate(block) {
       buttonContainer.querySelector('.button').classList.remove('button');
     });
 
-    // close dropdowns when search bar becomes sticky
-    const searchForm = document.querySelector('.search-form-wrapper');
-    if (searchForm) {
-      const observer = new MutationObserver(() => {
-        if (isDesktop.matches && searchForm.classList.contains('is-stuck')) {
-          toggleAllNavSections(navSections, false);
-        }
-      });
-      observer.observe(searchForm, { attributes: true, attributeFilter: ['class'] });
-    }
+    // close dropdowns when the bottom of the open panel scrolls past the viewport top
+    window.addEventListener('scroll', () => {
+      if (!isDesktop.matches) return;
+      const openPanel = navSections.querySelector('[aria-expanded="true"] > .nav-drop-panel');
+      if (!openPanel) return;
+      const panelBottom = openPanel.getBoundingClientRect().bottom;
+      if (panelBottom <= 0) {
+        toggleAllNavSections(navSections, false);
+      }
+    }, { passive: true });
   }
 
   const navTools = nav.querySelector('.nav-tools');
@@ -394,7 +399,7 @@ export default async function decorate(block) {
             const slug = brandSlugs.get(text);
             if (slug) {
               const img = document.createElement('img');
-              img.src = `/content/icons/brands/${slug}.svg`;
+              img.src = `/icons/brands/${slug}.svg`;
               img.alt = text;
               img.loading = 'lazy';
               a.textContent = '';
