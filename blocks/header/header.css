@@ -291,6 +291,7 @@ header nav .nav-sections ul > li > ul > li {
 
   header nav .nav-sections .default-content-wrapper > ul {
     display: flex;
+    align-items: center;
     gap: var(--header-nav-gap);
     margin: 0;
   }
