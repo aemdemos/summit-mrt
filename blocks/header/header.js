@@ -250,9 +250,14 @@ export default async function decorate(block) {
           const label = document.createElement('span');
           label.className = 'nav-drop-label';
           label.textContent = getDirectTextContent(navSection);
-          // Remove the bare text node
+          // Remove all direct children except nested <ul> (handles text nodes,
+          // <p> wrappers, etc. that AEM may add on published endpoints)
           [...navSection.childNodes].forEach((n) => {
-            if (n.nodeType === Node.TEXT_NODE && n.textContent.trim()) n.remove();
+            if (n.nodeType === Node.TEXT_NODE) {
+              if (n.textContent.trim()) n.remove();
+            } else if (n.nodeType === Node.ELEMENT_NODE && n.tagName !== 'UL') {
+              n.remove();
+            }
           });
           navSection.prepend(label);
         }
