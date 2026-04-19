@@ -44,7 +44,7 @@ function buildCalendarDOM(baseDate) {
   return container;
 }
 
-function createField(className, iconClass, label, inputAttrs) {
+function createField(className, iconChar, label, inputAttrs) {
   const field = document.createElement('div');
   field.className = `search-field ${className}`;
 
@@ -52,7 +52,8 @@ function createField(className, iconClass, label, inputAttrs) {
   lbl.className = 'search-field-label';
 
   const icon = document.createElement('span');
-  icon.className = `search-field-icon ${iconClass}`;
+  icon.className = 'search-field-icon';
+  icon.textContent = iconChar;
   lbl.appendChild(icon);
 
   const labelText = document.createTextNode(label);
@@ -86,13 +87,13 @@ export default function decorate(block) {
   const fields = document.createElement('div');
   fields.className = 'search-form-fields';
 
-  fields.appendChild(createField('search-field-destination', 'search-icon-pin', 'Destination', { placeholder: destinationText }));
+  fields.appendChild(createField('search-field-destination', '\uE900', 'Destination', { placeholder: destinationText }));
 
   const divider = document.createElement('div');
   divider.className = 'search-field-divider';
   fields.appendChild(divider);
 
-  fields.appendChild(createField('search-field-dates', 'search-icon-calendar', 'Dates', { value: defaultDates }));
+  fields.appendChild(createField('search-field-dates', '\uEA18', 'Dates', { value: defaultDates }));
 
   form.appendChild(fields);
 
